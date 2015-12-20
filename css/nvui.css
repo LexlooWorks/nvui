@@ -1,0 +1,232 @@
+@font-face {
+    font-family: Muiicons;
+    font-weight: normal;
+    font-style: normal;
+
+    src: url('../fonts/mui.ttf') format('truetype');
+}
+
+body{
+    font-family:"Microsoft YaHei",Arial,Helvetica,sans-serif,"宋体";
+    font-size: 17px;
+    line-height: 21px;
+    color: #000;
+    background-color: #fff;
+    padding:0;
+    margin:0;
+    outline: 0;
+    border: 0;
+}
+
+.nvui-form {
+    margin-top:15px;
+    background-color: #efeff4;
+}
+
+.nvui-form .nvui-form-group{
+    overflow: hidden;
+    background-color: #fff;
+    margin-bottom: 15px;
+    border-bottom: 1px solid #c8c7cc;
+}
+
+.nvui-input-row::after{
+    position: absolute;
+    right: 0;
+    left: 0;
+    top: 0;
+    height: 1px;
+    content: '';
+    background-color: #c8c7cc;
+}
+
+.nvui-input-row
+{
+    clear: left;
+    overflow: hidden;
+    position: relative;
+	height: 40px;
+}
+
+.nvui-input-row label{
+    line-height: 1.1;
+    float: left;
+    padding: 10px 15px;
+    position: absolute;
+}
+
+.nvui-input-row label~input, 
+.nvui-input-row label~select, 
+.nvui-input-row label~textarea{
+    width: 100%;
+    margin-left:130px;
+    margin-bottom: 0;
+    padding-left: 0;
+    border: 0;
+}
+.nvui-input-row .nvui-btn+input, 
+.nvui-input-row label+input, 
+.nvui-input-row:last-child {
+    background: 0 0;
+}
+.nvui-input-group input, 
+.nvui-input-group textarea {
+    margin-bottom: 0;
+    border: 0;
+    border-radius: 0;
+    background-color: transparent;
+    -webkit-box-shadow: none;
+    box-shadow: none;
+}
+
+input[type=color], 
+input[type=date], 
+input[type=datetime-local], 
+input[type=datetime], 
+input[type=email], 
+input[type=month], 
+input[type=number], 
+input[type=password], 
+input[type=search], 
+input[type=tel], 
+input[type=text], 
+input[type=time], 
+input[type=url], 
+input[type=week], 
+select, textarea {
+    line-height: 21px;
+    width: 100%;
+    height: 40px;
+    margin-bottom: 15px;
+    padding: 0 15px;
+    -webkit-user-select: text;
+    border: 1px solid rgba(0,0,0,.2);
+    border-radius: 3px;
+    outline: 0;
+    background-color: #fff;
+    -webkit-appearance: none;
+}
+input, select, textarea {
+    font-family: 'Helvetica Neue',Helvetica,sans-serif;
+    font-size: 17px;
+    -webkit-tap-highlight-color: transparent;
+    -webkit-tap-highlight-color: transparent;
+}
+input {
+    line-height: normal;
+}
+button, input, optgroup, select, textarea {
+    font: inherit;
+    margin: 0;
+    color: inherit;
+}
+
+.nvui-icon
+{
+    font-size: 20px;
+    line-height: 30px;
+
+    width: 40px;
+    height: 30px;
+    margin: 3px;
+
+    text-align: center;
+}
+
+.nvui-icon
+{
+    font-family: Muiicons;
+    font-size: 24px;
+    font-weight: normal;
+    font-style: normal;
+    line-height: 1;
+
+    display: inline-block;
+
+    text-decoration: none;
+
+    -webkit-font-smoothing: antialiased;
+}
+.nvui-input-row .nvui-input-clear ~ .nvui-icon-clear, 
+.nvui-input-row .nvui-input-speech ~ .nvui-icon-speech
+{
+    font-size: 20px;
+
+    position: absolute;
+    z-index: 1;
+    top: 10px;
+    right: 0;
+
+    width: 38px;
+    height: 38px;
+
+    text-align: center;
+
+    color: #999;
+}
+
+.nvui-input-row .nvui-input-speech ~ .nvui-icon-speech
+{
+    font-size: 24px;
+    top: 8px;
+}
+
+.nvui-input-row .nvui-input-clear ~ .nvui-icon-clear ~ .nvui-icon-speech
+{
+    display: none;
+}
+
+.nvui-icon-speech:before {
+    content: '\e332';
+}
+.nvui-icon-clear:before
+{
+    content: '\e434';
+}
+
+.mui-input-range .nvui-tooltip
+{
+    font-size: 36px;
+    line-height: 64px;
+
+    position: absolute;
+    z-index: 1;
+    top: -70px;
+
+    width: 64px;
+    height: 64px;
+
+    text-align: center;
+
+    opacity: .8;
+    color: #333;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    background-color: #fff;
+    text-shadow: 0 1px 0 #f3f3f3;
+}
+
+.nvui-hidden
+{
+    display: none !important;
+}
+
+.nvui-toast-container
+{
+    position: fixed;
+    z-index: 9999;
+    bottom: 50px;
+    width: 100%;
+}
+
+.nvui-toast-message
+{
+    font-size: 14px;
+    width: 270px;
+    margin: 5px auto 5px auto;
+    padding: 5px 5px 5px 5px;
+    text-align: center;
+    color: #000;
+    border-radius: 7px;
+    background-color: #d8d8d8;
+}

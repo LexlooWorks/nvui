@@ -475,62 +475,62 @@ window.$ = nvui;
 	detect.call($, navigator.userAgent);
 })(nvui, document);
 
-// /**
-//  * nvui target(action>popover>modal>tab>toggle)
-//  */
-// (function($, window, document) {
-// 	/**
-// 	 * targets
-// 	 */
-// 	$.targets = {};
-// 	/**
-// 	 * target handles
-// 	 */
-// 	$.targetHandles = [];
-// 	/**
-// 	 * register target
-// 	 * @param {type} target
-// 	 * @returns {$.targets}
-// 	 */
-// 	$.registerTarget = function(target) {
-// 		target.index = target.index || 1000;
-// 		$.targetHandles.push(target);
+/**
+ * nvui target(action>popover>modal>tab>toggle)
+ */
+(function($, window, document) {
+	/**
+	 * targets
+	 */
+	$.targets = {};
+	/**
+	 * target handles
+	 */
+	$.targetHandles = [];
+	/**
+	 * register target
+	 * @param {type} target
+	 * @returns {$.targets}
+	 */
+	$.registerTarget = function(target) {
+		target.index = target.index || 1000;
+		$.targetHandles.push(target);
 
-// 		$.targetHandles.sort(function(a, b) {
-// 			return a.index - b.index;
-// 		});
+		$.targetHandles.sort(function(a, b) {
+			return a.index - b.index;
+		});
 
-// 		return $.targetHandles;
-// 	};
-// 	window.addEventListener('touchstart', function(event) {
-// 		var target = event.target;
-// 		var founds = {};
-// 		for (; target && target !== document; target = target.parentNode) {
-// 			var isFound = false;
-// 			$.each($.targetHandles, function(index, targetHandle) {
-// 				var name = targetHandle.name;
-// 				if (!isFound && !founds[name] && targetHandle.hasOwnProperty('handle')) {
-// 					$.targets[name] = targetHandle.handle(event, target);
-// 					if ($.targets[name]) {
-// 						founds[name] = true;
-// 						if (targetHandle.isContinue !== true) {
-// 							isFound = true;
-// 						}
-// 					}
-// 				} else {
-// 					if (!founds[name]) {
-// 						if (targetHandle.isReset !== false)
-// 							$.targets[name] = false;
-// 					}
-// 				}
-// 			});
-// 			if (isFound) {
-// 				break;
-// 			}
-// 		}
+		return $.targetHandles;
+	};
+	window.addEventListener('touchstart', function(event) {
+		var target = event.target;
+		var founds = {};
+		for (; target && target !== document; target = target.parentNode) {
+			var isFound = false;
+			$.each($.targetHandles, function(index, targetHandle) {
+				var name = targetHandle.name;
+				if (!isFound && !founds[name] && targetHandle.hasOwnProperty('handle')) {
+					$.targets[name] = targetHandle.handle(event, target);
+					if ($.targets[name]) {
+						founds[name] = true;
+						if (targetHandle.isContinue !== true) {
+							isFound = true;
+						}
+					}
+				} else {
+					if (!founds[name]) {
+						if (targetHandle.isReset !== false)
+							$.targets[name] = false;
+					}
+				}
+			});
+			if (isFound) {
+				break;
+			}
+		}
 
-// 	});
-// })(nvui, window, document);
+	});
+})(nvui, window, document);
 
 /**
  * fixed CustomEvent
@@ -608,7 +608,7 @@ window.$ = nvui;
 })(document);
 
 /**
- * mui fixed requestAnimationFrame
+ * nvui fixed requestAnimationFrame
  * @param {type} window
  * @returns {undefined}
  */
@@ -636,1175 +636,1175 @@ window.$ = nvui;
 	};
 }(window));
 
-// /**
-//  * fastclick(only for radio,checkbox)
-//  */
-// (function($, window, name) {
-// 	if (window.FastClick) {
-// 		return;
-// 	}
+/**
+ * fastclick(only for radio,checkbox)
+ */
+(function($, window, name) {
+	if (window.FastClick) {
+		return;
+	}
 
-// 	var handle = function(event, target) {
-// 		if (target.tagName === 'LABEL') {
-// 			if (target.parentNode) {
-// 				target = target.parentNode.querySelector('input');
-// 			}
-// 		}
-// 		if (target && (target.type === 'radio' || target.type === 'checkbox')) {
-// 			if (!target.disabled) { //disabled
-// 				return target;
-// 			}
-// 		}
-// 		return false;
-// 	};
+	var handle = function(event, target) {
+		if (target.tagName === 'LABEL') {
+			if (target.parentNode) {
+				target = target.parentNode.querySelector('input');
+			}
+		}
+		if (target && (target.type === 'radio' || target.type === 'checkbox')) {
+			if (!target.disabled) { //disabled
+				return target;
+			}
+		}
+		return false;
+	};
 
-// 	$.registerTarget({
-// 		name: name,
-// 		index: 40,
-// 		handle: handle,
-// 		target: false
-// 	});
-// 	var dispatchEvent = function(event) {
-// 		var targetElement = $.targets.click;
-// 		if (targetElement) {
-// 			var clickEvent, touch;
-// 			// On some Android devices activeElement needs to be blurred otherwise the synthetic click will have no effect
-// 			if (document.activeElement && document.activeElement !== targetElement) {
-// 				document.activeElement.blur();
-// 			}
-// 			touch = event.detail.gesture.changedTouches[0];
-// 			// Synthesise a click event, with an extra attribute so it can be tracked
-// 			clickEvent = document.createEvent('MouseEvents');
-// 			clickEvent.initMouseEvent('click', true, true, window, 1, touch.screenX, touch.screenY, touch.clientX, touch.clientY, false, false, false, false, 0, null);
-// 			clickEvent.forwardedTouchEvent = true;
-// 			targetElement.dispatchEvent(clickEvent);
-// 			event.detail && event.detail.gesture.preventDefault();
-// 		}
-// 	};
-// 	window.addEventListener('tap', dispatchEvent);
-// 	window.addEventListener('doubletap', dispatchEvent);
-// 	//捕获
-// 	window.addEventListener('click', function(event) {
-// 		if ($.targets.click) {
-// 			if (!event.forwardedTouchEvent) { //stop click
-// 				if (event.stopImmediatePropagation) {
-// 					event.stopImmediatePropagation();
-// 				} else {
-// 					// Part of the hack for browsers that don't support Event#stopImmediatePropagation
-// 					event.propagationStopped = true;
-// 				}
-// 				event.stopPropagation();
-// 				event.preventDefault();
-// 				return false;
-// 			}
-// 		}
-// 	}, true);
+	$.registerTarget({
+		name: name,
+		index: 40,
+		handle: handle,
+		target: false
+	});
+	var dispatchEvent = function(event) {
+		var targetElement = $.targets.click;
+		if (targetElement) {
+			var clickEvent, touch;
+			// On some Android devices activeElement needs to be blurred otherwise the synthetic click will have no effect
+			if (document.activeElement && document.activeElement !== targetElement) {
+				document.activeElement.blur();
+			}
+			touch = event.detail.gesture.changedTouches[0];
+			// Synthesise a click event, with an extra attribute so it can be tracked
+			clickEvent = document.createEvent('MouseEvents');
+			clickEvent.initMouseEvent('click', true, true, window, 1, touch.screenX, touch.screenY, touch.clientX, touch.clientY, false, false, false, false, 0, null);
+			clickEvent.forwardedTouchEvent = true;
+			targetElement.dispatchEvent(clickEvent);
+			event.detail && event.detail.gesture.preventDefault();
+		}
+	};
+	window.addEventListener('tap', dispatchEvent);
+	window.addEventListener('doubletap', dispatchEvent);
+	//捕获
+	window.addEventListener('click', function(event) {
+		if ($.targets.click) {
+			if (!event.forwardedTouchEvent) { //stop click
+				if (event.stopImmediatePropagation) {
+					event.stopImmediatePropagation();
+				} else {
+					// Part of the hack for browsers that don't support Event#stopImmediatePropagation
+					event.propagationStopped = true;
+				}
+				event.stopPropagation();
+				event.preventDefault();
+				return false;
+			}
+		}
+	}, true);
 
-// })(mui, window, 'click');
+})(nvui, window, 'click');
 
-// (function($, document) {
-// 	$(function() {
-// 		if (!$.os.ios) {
-// 			return;
-// 		}
-// 		var CLASS_FOCUSIN = 'mui-focusin';
-// 		var CLASS_BAR_TAB = 'mui-bar-tab';
-// 		var CLASS_BAR_FOOTER = 'mui-bar-footer';
-// 		var CLASS_BAR_FOOTER_SECONDARY = 'mui-bar-footer-secondary';
-// 		var CLASS_BAR_FOOTER_SECONDARY_TAB = 'mui-bar-footer-secondary-tab';
-// 		// var content = document.querySelector('.' + CLASS_CONTENT);
-// 		// if (content) {
-// 		// 	document.body.insertBefore(content, document.body.firstElementChild);
-// 		// }
-// 		document.addEventListener('focusin', function(e) {
-// 			if ($.os.plus) { //在父webview里边不fix
-// 				if (window.plus) {
-// 					if (plus.webview.currentWebview().children().length > 0) {
-// 						return;
-// 					}
-// 				}
-// 			}
-// 			var target = e.target;
-// 			if (target.tagName && target.tagName === 'INPUT' && (target.type === 'text' || target.type === 'search' || target.type === 'number')) {
-// 				if (target.disabled || target.readOnly) {
-// 					return;
-// 				}
-// 				document.body.classList.add(CLASS_FOCUSIN);
-// 				var isFooter = false;
-// 				for (; target && target !== document; target = target.parentNode) {
-// 					var classList = target.classList;
-// 					if (classList && classList.contains(CLASS_BAR_TAB) || classList.contains(CLASS_BAR_FOOTER) || classList.contains(CLASS_BAR_FOOTER_SECONDARY) || classList.contains(CLASS_BAR_FOOTER_SECONDARY_TAB)) {
-// 						isFooter = true;
-// 						break;
-// 					}
-// 				}
-// 				if (isFooter) {
-// 					var scrollTop = document.body.scrollHeight;
-// 					var scrollLeft = document.body.scrollLeft;
-// 					setTimeout(function() {
-// 						window.scrollTo(scrollLeft, scrollTop);
-// 					}, 20);
-// 				}
-// 			}
-// 		});
-// 		document.addEventListener('focusout', function(e) {
-// 			var classList = document.body.classList;
-// 			if (classList.contains(CLASS_FOCUSIN)) {
-// 				classList.remove(CLASS_FOCUSIN);
-// 				setTimeout(function() {
-// 					window.scrollTo(document.body.scrollLeft, document.body.scrollTop);
-// 				}, 20);
-// 			}
-// 		});
-// 	});
-// })(mui, document);
+(function($, document) {
+	$(function() {
+		if (!$.os.ios) {
+			return;
+		}
+		var CLASS_FOCUSIN = 'nvui-focusin';
+		var CLASS_BAR_TAB = 'nvui-bar-tab';
+		var CLASS_BAR_FOOTER = 'nvui-bar-footer';
+		var CLASS_BAR_FOOTER_SECONDARY = 'nvui-bar-footer-secondary';
+		var CLASS_BAR_FOOTER_SECONDARY_TAB = 'nvui-bar-footer-secondary-tab';
+		// var content = document.querySelector('.' + CLASS_CONTENT);
+		// if (content) {
+		// 	document.body.insertBefore(content, document.body.firstElementChild);
+		// }
+		document.addEventListener('focusin', function(e) {
+			if ($.os.plus) { //在父webview里边不fix
+				if (window.plus) {
+					if (plus.webview.currentWebview().children().length > 0) {
+						return;
+					}
+				}
+			}
+			var target = e.target;
+			if (target.tagName && target.tagName === 'INPUT' && (target.type === 'text' || target.type === 'search' || target.type === 'number')) {
+				if (target.disabled || target.readOnly) {
+					return;
+				}
+				document.body.classList.add(CLASS_FOCUSIN);
+				var isFooter = false;
+				for (; target && target !== document; target = target.parentNode) {
+					var classList = target.classList;
+					if (classList && classList.contains(CLASS_BAR_TAB) || classList.contains(CLASS_BAR_FOOTER) || classList.contains(CLASS_BAR_FOOTER_SECONDARY) || classList.contains(CLASS_BAR_FOOTER_SECONDARY_TAB)) {
+						isFooter = true;
+						break;
+					}
+				}
+				if (isFooter) {
+					var scrollTop = document.body.scrollHeight;
+					var scrollLeft = document.body.scrollLeft;
+					setTimeout(function() {
+						window.scrollTo(scrollLeft, scrollTop);
+					}, 20);
+				}
+			}
+		});
+		document.addEventListener('focusout', function(e) {
+			var classList = document.body.classList;
+			if (classList.contains(CLASS_FOCUSIN)) {
+				classList.remove(CLASS_FOCUSIN);
+				setTimeout(function() {
+					window.scrollTo(document.body.scrollLeft, document.body.scrollTop);
+				}, 20);
+			}
+		});
+	});
+})(nvui, document);
 
-// /**
-//  * mui namespace(optimization)
-//  * @param {type} $
-//  * @returns {undefined}
-//  */
-// (function($) {
-// 	$.namespace = 'nvui';
-// 	$.classNamePrefix = $.namespace + '-';
-// 	$.classSelectorPrefix = '.' + $.classNamePrefix;
-// 	/**
-// 	 * 返回正确的className
-// 	 * @param {type} className
-// 	 * @returns {String}
-// 	 */
-// 	$.className = function(className) {
-// 		return $.classNamePrefix + className;
-// 	};
-// 	*
-// 	 * 返回正确的classSelector
-// 	 * @param {type} classSelector
-// 	 * @returns {String}
-//	 */
-// 	$.classSelector = function(classSelector) {
-// 		return classSelector.replace(/\./g, $.classSelectorPrefix);
-// 	};
-// 	/**
-// 	 * 返回正确的eventName
-// 	 * @param {type} event
-// 	 * @param {type} module
-// 	 * @returns {String}
-// 	 */
-// 	$.eventName = function(event, module) {
-// 		return event + ($.namespace ? ('.' + $.namespace) : '') + (module ? ('.' + module) : '');
-// 	};
-// })(nvui);
-// /**
-//  * 仅提供简单的on，off(仅支持事件委托，不支持当前元素绑定，当前元素绑定请直接使用addEventListener,removeEventListener)
-//  * @param {Object} $
-//  */
-// (function($) {
+/**
+ * nvui namespace(optimization)
+ * @param {type} $
+ * @returns {undefined}
+ */
+(function($) {
+	$.namespace = 'nvui';
+	$.classNamePrefix = $.namespace + '-';
+	$.classSelectorPrefix = '.' + $.classNamePrefix;
+	/**
+	 * 返回正确的className
+	 * @param {type} className
+	 * @returns {String}
+	 */
+	$.className = function(className) {
+		return $.classNamePrefix + className;
+	};
+	/**
+	 * 返回正确的classSelector
+	 * @param {type} classSelector
+	 * @returns {String}
+	 */
+	$.classSelector = function(classSelector) {
+		return classSelector.replace(/\./g, $.classSelectorPrefix);
+	};
+	/**
+	 * 返回正确的eventName
+	 * @param {type} event
+	 * @param {type} module
+	 * @returns {String}
+	 */
+	$.eventName = function(event, module) {
+		return event + ($.namespace ? ('.' + $.namespace) : '') + (module ? ('.' + module) : '');
+	};
+})(nvui);
+/**
+ * 仅提供简单的on，off(仅支持事件委托，不支持当前元素绑定，当前元素绑定请直接使用addEventListener,removeEventListener)
+ * @param {Object} $
+ */
+(function($) {
 
-// 	var _mid = 1;
-// 	var delegates = {};
-// 	//需要wrap的函数
-// 	var eventMethods = {
-// 		preventDefault: 'isDefaultPrevented',
-// 		stopImmediatePropagation: 'isImmediatePropagationStopped',
-// 		stopPropagation: 'isPropagationStopped'
-// 	};
-// 	//默认true返回函数
-// 	var returnTrue = function() {
-// 		return true
-// 	};
-// 	//默认false返回函数
-// 	var returnFalse = function() {
-// 		return false
-// 	};
-// 	//wrap浏览器事件
-// 	var compatible = function(event, target) {
-// 		if (!event.detail) {
-// 			event.detail = {
-// 				currentTarget: target
-// 			};
-// 		} else {
-// 			event.detail.currentTarget = target;
-// 		}
-// 		$.each(eventMethods, function(name, predicate) {
-// 			var sourceMethod = event[name];
-// 			event[name] = function() {
-// 				this[predicate] = returnTrue;
-// 				return sourceMethod && sourceMethod.apply(event, arguments)
-// 			}
-// 			event[predicate] = returnFalse;
-// 		}, true);
-// 		return event;
-// 	};
-// 	//简单的wrap对象_mid
-// 	var mid = function(obj) {
-// 		return obj && (obj._mid || (obj._mid = _mid++));
-// 	};
-// 	//事件委托对象绑定的事件回调列表
-// 	var delegateFns = {};
-// 	//返回事件委托的wrap事件回调
-// 	var delegateFn = function(element, event, selector, callback) {
-// 		return function(e) {
-// 			//same event
-// 			var callbackObjs = delegates[element._mid][event];
-// 			var handlerQueue = [];
-// 			var target = e.target;
-// 			var selectorAlls = {};
-// 			for (; target && target !== document; target = target.parentNode) {
-// 				if (target === element) {
-// 					break;
-// 				}
-// 				if (~['click', 'tap', 'doubletap', 'longtap', 'hold'].indexOf(event) && (target.disabled || target.classList.contains('mui-disabled'))) {
-// 					break;
-// 				}
-// 				var matches = {};
-// 				$.each(callbackObjs, function(selector, callbacks) { //same selector
-// 					selectorAlls[selector] || (selectorAlls[selector] = $.qsa(selector, element));
-// 					if (selectorAlls[selector] && ~(selectorAlls[selector]).indexOf(target)) {
-// 						if (!matches[selector]) {
-// 							matches[selector] = callbacks;
-// 						}
-// 					}
-// 				}, true);
-// 				if (!$.isEmptyObject(matches)) {
-// 					handlerQueue.push({
-// 						element: target,
-// 						handlers: matches
-// 					});
-// 				}
-// 			}
-// 			selectorAlls = null;
-// 			e = compatible(e); //compatible event
-// 			$.each(handlerQueue, function(index, handler) {
-// 				target = handler.element;
-// 				var tagName = target.tagName;
-// 				if (event === 'tap' && (tagName !== 'INPUT' && tagName !== 'TEXTAREA' && tagName !== 'SELECT')) {
-// 					e.preventDefault();
-// 					e.detail && e.detail.gesture && e.detail.gesture.preventDefault();
-// 				}
-// 				$.each(handler.handlers, function(index, handler) {
-// 					$.each(handler, function(index, callback) {
-// 						if (callback.call(target, e) === false) {
-// 							e.preventDefault();
-// 							e.stopPropagation();
-// 						}
-// 					}, true);
-// 				}, true)
-// 				if (e.isPropagationStopped()) {
-// 					return false;
-// 				}
-// 			}, true);
-// 		};
-// 	};
-// 	var preventDefaultException = /^(INPUT|TEXTAREA|BUTTON|SELECT)$/;
-// 	/**
-// 	 * mui delegate events
-// 	 * @param {type} event
-// 	 * @param {type} selector
-// 	 * @param {type} callback
-// 	 * @returns {undefined}
-// 	 */
-// 	$.fn.on = function(event, selector, callback) { //仅支持简单的事件委托,主要是tap事件使用，类似mouse,focus之类暂不封装支持
-// 		return this.each(function() {
-// 			var element = this;
-// 			mid(element);
-// 			mid(callback);
-// 			var isAddEventListener = false;
-// 			var delegateEvents = delegates[element._mid] || (delegates[element._mid] = {});
-// 			var delegateCallbackObjs = delegateEvents[event] || ((delegateEvents[event] = {}));
-// 			if ($.isEmptyObject(delegateCallbackObjs)) {
-// 				isAddEventListener = true;
-// 			}
-// 			var delegateCallbacks = delegateCallbackObjs[selector] || (delegateCallbackObjs[selector] = []);
-// 			delegateCallbacks.push(callback);
-// 			if (isAddEventListener) {
-// 				delegateFns[mid(element)] = delegateFn(element, event, selector, callback);
-// 				element.addEventListener(event, delegateFns[mid(element)]);
-// 				if (event === 'tap') { //TODO 需要找个更好的解决方案
-// 					element.addEventListener('click', function(e) {
-// 						if (e.target) {
-// 							var tagName = e.target.tagName;
-// 							if (!preventDefaultException.test(tagName)) {
-// 								if (tagName === 'A') {
-// 									var href = e.target.href;
-// 									if (!(href && ~href.indexOf('tel:'))) {
-// 										e.preventDefault();
-// 									}
-// 								} else {
-// 									e.preventDefault();
-// 								}
-// 							}
-// 						}
-// 					});
-// 				}
-// 			}
-// 		});
-// 	};
-// 	$.fn.off = function(event, selector, callback) {
-// 		return this.each(function() {
-// 			var _mid = mid(this);
-// 			if (!callback) {
-// 				if (delegates[_mid] && delegates[_mid][event]) {
-// 					delete delegates[_mid][event][selector];
-// 				}
-// 			} else {
-// 				var delegateCallbacks = delegates[_mid] && delegates[_mid][event] && delegates[_mid][event][selector];
-// 				$.each(delegateCallbacks, function(index, delegateCallback) {
-// 					if (mid(delegateCallback) === mid(callback)) {
-// 						delegateCallbacks.splice(index, 1);
-// 						return false;
-// 					}
-// 				}, true);
-// 			}
-// 			//如果off掉了所有当前element的指定的event事件，则remove掉当前element的delegate回调
-// 			if (delegates[_mid] && $.isEmptyObject(delegates[_mid][event])) {
-// 				this.removeEventListener(event, delegateFns[_mid]);
-// 				delete delegateFns[_mid];
-// 			}
-// 		})
-// 	};
-// })(mui);
-// /**
-//  * mui gestures
-//  * @param {type} $
-//  * @param {type} window
-//  * @returns {undefined}
-//  */
-// (function($, window) {
-// 	$.EVENT_START = 'touchstart';
-// 	$.EVENT_MOVE = 'touchmove';
-// 	$.EVENT_END = 'touchend';
-// 	$.EVENT_CANCEL = 'touchcancel';
-// 	$.EVENT_CLICK = 'click';
-// 	/**
-// 	 * Gesture preventDefault
-// 	 * @param {type} e
-// 	 * @returns {undefined}
-// 	 */
-// 	$.preventDefault = function(e) {
-// 		e.preventDefault();
-// 	};
-// 	/**
-// 	 * Gesture stopPropagation
-// 	 * @param {type} e
-// 	 * @returns {undefined}
-// 	 */
-// 	$.stopPropagation = function(e) {
-// 		e.stopPropagation();
-// 	};
+	var _mid = 1;
+	var delegates = {};
+	//需要wrap的函数
+	var eventMethods = {
+		preventDefault: 'isDefaultPrevented',
+		stopImmediatePropagation: 'isImmediatePropagationStopped',
+		stopPropagation: 'isPropagationStopped'
+	};
+	//默认true返回函数
+	var returnTrue = function() {
+		return true
+	};
+	//默认false返回函数
+	var returnFalse = function() {
+		return false
+	};
+	//wrap浏览器事件
+	var compatible = function(event, target) {
+		if (!event.detail) {
+			event.detail = {
+				currentTarget: target
+			};
+		} else {
+			event.detail.currentTarget = target;
+		}
+		$.each(eventMethods, function(name, predicate) {
+			var sourceMethod = event[name];
+			event[name] = function() {
+				this[predicate] = returnTrue;
+				return sourceMethod && sourceMethod.apply(event, arguments)
+			}
+			event[predicate] = returnFalse;
+		}, true);
+		return event;
+	};
+	//简单的wrap对象_mid
+	var mid = function(obj) {
+		return obj && (obj._mid || (obj._mid = _mid++));
+	};
+	//事件委托对象绑定的事件回调列表
+	var delegateFns = {};
+	//返回事件委托的wrap事件回调
+	var delegateFn = function(element, event, selector, callback) {
+		return function(e) {
+			//same event
+			var callbackObjs = delegates[element._mid][event];
+			var handlerQueue = [];
+			var target = e.target;
+			var selectorAlls = {};
+			for (; target && target !== document; target = target.parentNode) {
+				if (target === element) {
+					break;
+				}
+				if (~['click', 'tap', 'doubletap', 'longtap', 'hold'].indexOf(event) && (target.disabled || target.classList.contains('nvui-disabled'))) {
+					break;
+				}
+				var matches = {};
+				$.each(callbackObjs, function(selector, callbacks) { //same selector
+					selectorAlls[selector] || (selectorAlls[selector] = $.qsa(selector, element));
+					if (selectorAlls[selector] && ~(selectorAlls[selector]).indexOf(target)) {
+						if (!matches[selector]) {
+							matches[selector] = callbacks;
+						}
+					}
+				}, true);
+				if (!$.isEmptyObject(matches)) {
+					handlerQueue.push({
+						element: target,
+						handlers: matches
+					});
+				}
+			}
+			selectorAlls = null;
+			e = compatible(e); //compatible event
+			$.each(handlerQueue, function(index, handler) {
+				target = handler.element;
+				var tagName = target.tagName;
+				if (event === 'tap' && (tagName !== 'INPUT' && tagName !== 'TEXTAREA' && tagName !== 'SELECT')) {
+					e.preventDefault();
+					e.detail && e.detail.gesture && e.detail.gesture.preventDefault();
+				}
+				$.each(handler.handlers, function(index, handler) {
+					$.each(handler, function(index, callback) {
+						if (callback.call(target, e) === false) {
+							e.preventDefault();
+							e.stopPropagation();
+						}
+					}, true);
+				}, true)
+				if (e.isPropagationStopped()) {
+					return false;
+				}
+			}, true);
+		};
+	};
+	var preventDefaultException = /^(INPUT|TEXTAREA|BUTTON|SELECT)$/;
+	/**
+	 * nvui delegate events
+	 * @param {type} event
+	 * @param {type} selector
+	 * @param {type} callback
+	 * @returns {undefined}
+	 */
+	$.fn.on = function(event, selector, callback) { //仅支持简单的事件委托,主要是tap事件使用，类似mouse,focus之类暂不封装支持
+		return this.each(function() {
+			var element = this;
+			mid(element);
+			mid(callback);
+			var isAddEventListener = false;
+			var delegateEvents = delegates[element._mid] || (delegates[element._mid] = {});
+			var delegateCallbackObjs = delegateEvents[event] || ((delegateEvents[event] = {}));
+			if ($.isEmptyObject(delegateCallbackObjs)) {
+				isAddEventListener = true;
+			}
+			var delegateCallbacks = delegateCallbackObjs[selector] || (delegateCallbackObjs[selector] = []);
+			delegateCallbacks.push(callback);
+			if (isAddEventListener) {
+				delegateFns[mid(element)] = delegateFn(element, event, selector, callback);
+				element.addEventListener(event, delegateFns[mid(element)]);
+				if (event === 'tap') { //TODO 需要找个更好的解决方案
+					element.addEventListener('click', function(e) {
+						if (e.target) {
+							var tagName = e.target.tagName;
+							if (!preventDefaultException.test(tagName)) {
+								if (tagName === 'A') {
+									var href = e.target.href;
+									if (!(href && ~href.indexOf('tel:'))) {
+										e.preventDefault();
+									}
+								} else {
+									e.preventDefault();
+								}
+							}
+						}
+					});
+				}
+			}
+		});
+	};
+	$.fn.off = function(event, selector, callback) {
+		return this.each(function() {
+			var _mid = mid(this);
+			if (!callback) {
+				if (delegates[_mid] && delegates[_mid][event]) {
+					delete delegates[_mid][event][selector];
+				}
+			} else {
+				var delegateCallbacks = delegates[_mid] && delegates[_mid][event] && delegates[_mid][event][selector];
+				$.each(delegateCallbacks, function(index, delegateCallback) {
+					if (mid(delegateCallback) === mid(callback)) {
+						delegateCallbacks.splice(index, 1);
+						return false;
+					}
+				}, true);
+			}
+			//如果off掉了所有当前element的指定的event事件，则remove掉当前element的delegate回调
+			if (delegates[_mid] && $.isEmptyObject(delegates[_mid][event])) {
+				this.removeEventListener(event, delegateFns[_mid]);
+				delete delegateFns[_mid];
+			}
+		})
+	};
+})(nvui);
+/**
+ * nvui gestures
+ * @param {type} $
+ * @param {type} window
+ * @returns {undefined}
+ */
+(function($, window) {
+	$.EVENT_START = 'touchstart';
+	$.EVENT_MOVE = 'touchmove';
+	$.EVENT_END = 'touchend';
+	$.EVENT_CANCEL = 'touchcancel';
+	$.EVENT_CLICK = 'click';
+	/**
+	 * Gesture preventDefault
+	 * @param {type} e
+	 * @returns {undefined}
+	 */
+	$.preventDefault = function(e) {
+		e.preventDefault();
+	};
+	/**
+	 * Gesture stopPropagation
+	 * @param {type} e
+	 * @returns {undefined}
+	 */
+	$.stopPropagation = function(e) {
+		e.stopPropagation();
+	};
 
-// 	/**
-// 	 * register gesture
-// 	 * @param {type} gesture
-// 	 * @returns {$.gestures}
-// 	 */
-// 	$.registerGesture = function(gesture) {
-// 		return $.registerHandler('gestures', gesture);
+	/**
+	 * register gesture
+	 * @param {type} gesture
+	 * @returns {$.gestures}
+	 */
+	$.registerGesture = function(gesture) {
+		return $.registerHandler('gestures', gesture);
 
-// 	};
+	};
 
-// 	var round = Math.round;
-// 	var abs = Math.abs;
-// 	var sqrt = Math.sqrt;
-// 	var atan = Math.atan;
-// 	var atan2 = Math.atan2;
-// 	/**
-// 	 * distance
-// 	 * @param {type} p1
-// 	 * @param {type} p2
-// 	 * @returns {Number}
-// 	 */
-// 	var getDistance = function(p1, p2, props) {
-// 		if (!props) {
-// 			props = ['x', 'y'];
-// 		}
-// 		var x = p2[props[0]] - p1[props[0]];
-// 		var y = p2[props[1]] - p1[props[1]];
-// 		return sqrt((x * x) + (y * y));
-// 	};
-// 	/**
-// 	 * scale
-// 	 * @param {Object} starts
-// 	 * @param {Object} moves
-// 	 */
-// 	var getScale = function(starts, moves) {
-// 		if (starts.length >= 2 && moves.length >= 2) {
-// 			var props = ['pageX', 'pageY'];
-// 			return getDistance(moves[1], moves[0], props) / getDistance(starts[1], starts[0], props);
-// 		}
-// 		return 1;
-// 	};
-// 	/**
-// 	 * angle
-// 	 * @param {type} p1
-// 	 * @param {type} p2
-// 	 * @returns {Number}
-// 	 */
-// 	var getAngle = function(p1, p2, props) {
-// 		if (!props) {
-// 			props = ['x', 'y'];
-// 		}
-// 		var x = p2[props[0]] - p1[props[0]];
-// 		var y = p2[props[1]] - p1[props[1]];
-// 		return atan2(y, x) * 180 / Math.PI;
-// 	};
-// 	/**
-// 	 * direction
-// 	 * @param {Object} x
-// 	 * @param {Object} y
-// 	 */
-// 	var getDirection = function(x, y) {
-// 		if (x === y) {
-// 			return '';
-// 		}
-// 		if (abs(x) >= abs(y)) {
-// 			return x > 0 ? 'left' : 'right';
-// 		}
-// 		return y > 0 ? 'up' : 'down';
-// 	};
+	var round = Math.round;
+	var abs = Math.abs;
+	var sqrt = Math.sqrt;
+	var atan = Math.atan;
+	var atan2 = Math.atan2;
+	/**
+	 * distance
+	 * @param {type} p1
+	 * @param {type} p2
+	 * @returns {Number}
+	 */
+	var getDistance = function(p1, p2, props) {
+		if (!props) {
+			props = ['x', 'y'];
+		}
+		var x = p2[props[0]] - p1[props[0]];
+		var y = p2[props[1]] - p1[props[1]];
+		return sqrt((x * x) + (y * y));
+	};
+	/**
+	 * scale
+	 * @param {Object} starts
+	 * @param {Object} moves
+	 */
+	var getScale = function(starts, moves) {
+		if (starts.length >= 2 && moves.length >= 2) {
+			var props = ['pageX', 'pageY'];
+			return getDistance(moves[1], moves[0], props) / getDistance(starts[1], starts[0], props);
+		}
+		return 1;
+	};
+	/**
+	 * angle
+	 * @param {type} p1
+	 * @param {type} p2
+	 * @returns {Number}
+	 */
+	var getAngle = function(p1, p2, props) {
+		if (!props) {
+			props = ['x', 'y'];
+		}
+		var x = p2[props[0]] - p1[props[0]];
+		var y = p2[props[1]] - p1[props[1]];
+		return atan2(y, x) * 180 / Math.PI;
+	};
+	/**
+	 * direction
+	 * @param {Object} x
+	 * @param {Object} y
+	 */
+	var getDirection = function(x, y) {
+		if (x === y) {
+			return '';
+		}
+		if (abs(x) >= abs(y)) {
+			return x > 0 ? 'left' : 'right';
+		}
+		return y > 0 ? 'up' : 'down';
+	};
 
-// 	var getRotation = function(start, end) {
-// 		var props = ['pageX', 'pageY'];
-// 		return getAngle(end[1], end[0], props) - getAngle(start[1], start[0], props);
-// 	};
-// 	/**
-// 	 * detect gestures
-// 	 * @param {type} event
-// 	 * @param {type} touch
-// 	 * @returns {undefined}
-// 	 */
-// 	var detect = function(event, touch) {
-// 		if ($.gestures.stoped) {
-// 			return;
-// 		}
-// 		$.each($.gestures, function(index, gesture) {
-// 			if (!$.gestures.stoped) {
-// 				if ($.options.gestureConfig[gesture.name] !== false) {
-// 					gesture.handle(event, touch);
-// 				}
-// 			}
-// 		});
-// 	};
-// 	/**
-// 	 * px per ms
-// 	 * @param {Object} deltaTime
-// 	 * @param {Object} x
-// 	 * @param {Object} y
-// 	 */
-// 	var getVelocity = function(deltaTime, x, y) {
-// 		return {
-// 			x: x / deltaTime || 0,
-// 			y: y / deltaTime || 0
-// 		};
-// 	};
-// 	var hasParent = function(node, parent) {
-// 		while (node) {
-// 			if (node == parent) {
-// 				return true;
-// 			}
-// 			node = node.parentNode;
-// 		}
-// 		return false;
-// 	};
+	var getRotation = function(start, end) {
+		var props = ['pageX', 'pageY'];
+		return getAngle(end[1], end[0], props) - getAngle(start[1], start[0], props);
+	};
+	/**
+	 * detect gestures
+	 * @param {type} event
+	 * @param {type} touch
+	 * @returns {undefined}
+	 */
+	var detect = function(event, touch) {
+		if ($.gestures.stoped) {
+			return;
+		}
+		$.each($.gestures, function(index, gesture) {
+			if (!$.gestures.stoped) {
+				if ($.options.gestureConfig[gesture.name] !== false) {
+					gesture.handle(event, touch);
+				}
+			}
+		});
+	};
+	/**
+	 * px per ms
+	 * @param {Object} deltaTime
+	 * @param {Object} x
+	 * @param {Object} y
+	 */
+	var getVelocity = function(deltaTime, x, y) {
+		return {
+			x: x / deltaTime || 0,
+			y: y / deltaTime || 0
+		};
+	};
+	var hasParent = function(node, parent) {
+		while (node) {
+			if (node == parent) {
+				return true;
+			}
+			node = node.parentNode;
+		}
+		return false;
+	};
 
-// 	var uniqueArray = function(src, key, sort) {
-// 		var results = [];
-// 		var values = [];
-// 		var i = 0;
+	var uniqueArray = function(src, key, sort) {
+		var results = [];
+		var values = [];
+		var i = 0;
 
-// 		while (i < src.length) {
-// 			var val = key ? src[i][key] : src[i];
-// 			if (values.indexOf(val) < 0) {
-// 				results.push(src[i]);
-// 			}
-// 			values[i] = val;
-// 			i++;
-// 		}
+		while (i < src.length) {
+			var val = key ? src[i][key] : src[i];
+			if (values.indexOf(val) < 0) {
+				results.push(src[i]);
+			}
+			values[i] = val;
+			i++;
+		}
 
-// 		if (sort) {
-// 			if (!key) {
-// 				results = results.sort();
-// 			} else {
-// 				results = results.sort(function sortUniqueArray(a, b) {
-// 					return a[key] > b[key];
-// 				});
-// 			}
-// 		}
+		if (sort) {
+			if (!key) {
+				results = results.sort();
+			} else {
+				results = results.sort(function sortUniqueArray(a, b) {
+					return a[key] > b[key];
+				});
+			}
+		}
 
-// 		return results;
-// 	};
-// 	var getMultiCenter = function(touches) {
-// 		var touchesLength = touches.length;
-// 		if (touchesLength === 1) {
-// 			return {
-// 				x: round(touches[0].pageX),
-// 				y: round(touches[0].pageY)
-// 			};
-// 		}
+		return results;
+	};
+	var getMultiCenter = function(touches) {
+		var touchesLength = touches.length;
+		if (touchesLength === 1) {
+			return {
+				x: round(touches[0].pageX),
+				y: round(touches[0].pageY)
+			};
+		}
 
-// 		var x = 0;
-// 		var y = 0;
-// 		var i = 0;
-// 		while (i < touchesLength) {
-// 			x += touches[i].pageX;
-// 			y += touches[i].pageY;
-// 			i++;
-// 		}
+		var x = 0;
+		var y = 0;
+		var i = 0;
+		while (i < touchesLength) {
+			x += touches[i].pageX;
+			y += touches[i].pageY;
+			i++;
+		}
 
-// 		return {
-// 			x: round(x / touchesLength),
-// 			y: round(y / touchesLength)
-// 		};
-// 	};
-// 	var multiTouch = function() {
-// 		return $.options.gestureConfig.pinch;
-// 	};
-// 	var copySimpleTouchData = function(touch) {
-// 		var touches = [];
-// 		var i = 0;
-// 		while (i < touch.touches.length) {
-// 			touches[i] = {
-// 				pageX: round(touch.touches[i].pageX),
-// 				pageY: round(touch.touches[i].pageY)
-// 			};
-// 			i++;
-// 		}
-// 		return {
-// 			timestamp: $.now(),
-// 			gesture: touch.gesture,
-// 			touches: touches,
-// 			center: getMultiCenter(touch.touches),
-// 			deltaX: touch.deltaX,
-// 			deltaY: touch.deltaY
-// 		};
-// 	};
+		return {
+			x: round(x / touchesLength),
+			y: round(y / touchesLength)
+		};
+	};
+	var multiTouch = function() {
+		return $.options.gestureConfig.pinch;
+	};
+	var copySimpleTouchData = function(touch) {
+		var touches = [];
+		var i = 0;
+		while (i < touch.touches.length) {
+			touches[i] = {
+				pageX: round(touch.touches[i].pageX),
+				pageY: round(touch.touches[i].pageY)
+			};
+			i++;
+		}
+		return {
+			timestamp: $.now(),
+			gesture: touch.gesture,
+			touches: touches,
+			center: getMultiCenter(touch.touches),
+			deltaX: touch.deltaX,
+			deltaY: touch.deltaY
+		};
+	};
 
-// 	var calDelta = function(touch) {
-// 		var session = $.gestures.session;
-// 		var center = touch.center;
-// 		var offset = session.offsetDelta || {};
-// 		var prevDelta = session.prevDelta || {};
-// 		var prevTouch = session.prevTouch || {};
+	var calDelta = function(touch) {
+		var session = $.gestures.session;
+		var center = touch.center;
+		var offset = session.offsetDelta || {};
+		var prevDelta = session.prevDelta || {};
+		var prevTouch = session.prevTouch || {};
 
-// 		if (touch.gesture.type === $.EVENT_START || touch.gesture.type === $.EVENT_END) {
-// 			prevDelta = session.prevDelta = {
-// 				x: prevTouch.deltaX || 0,
-// 				y: prevTouch.deltaY || 0
-// 			};
+		if (touch.gesture.type === $.EVENT_START || touch.gesture.type === $.EVENT_END) {
+			prevDelta = session.prevDelta = {
+				x: prevTouch.deltaX || 0,
+				y: prevTouch.deltaY || 0
+			};
 
-// 			offset = session.offsetDelta = {
-// 				x: center.x,
-// 				y: center.y
-// 			};
-// 		}
-// 		touch.deltaX = prevDelta.x + (center.x - offset.x);
-// 		touch.deltaY = prevDelta.y + (center.y - offset.y);
-// 	};
-// 	var calTouchData = function(touch) {
-// 		var session = $.gestures.session;
-// 		var touches = touch.touches;
-// 		var touchesLength = touches.length;
+			offset = session.offsetDelta = {
+				x: center.x,
+				y: center.y
+			};
+		}
+		touch.deltaX = prevDelta.x + (center.x - offset.x);
+		touch.deltaY = prevDelta.y + (center.y - offset.y);
+	};
+	var calTouchData = function(touch) {
+		var session = $.gestures.session;
+		var touches = touch.touches;
+		var touchesLength = touches.length;
 
-// 		if (!session.firstTouch) {
-// 			session.firstTouch = copySimpleTouchData(touch);
-// 		}
+		if (!session.firstTouch) {
+			session.firstTouch = copySimpleTouchData(touch);
+		}
 
-// 		if (multiTouch() && touchesLength > 1 && !session.firstMultiTouch) {
-// 			session.firstMultiTouch = copySimpleTouchData(touch);
-// 		} else if (touchesLength === 1) {
-// 			session.firstMultiTouch = false;
-// 		}
+		if (multiTouch() && touchesLength > 1 && !session.firstMultiTouch) {
+			session.firstMultiTouch = copySimpleTouchData(touch);
+		} else if (touchesLength === 1) {
+			session.firstMultiTouch = false;
+		}
 
-// 		var firstTouch = session.firstTouch;
-// 		var firstMultiTouch = session.firstMultiTouch;
-// 		var offsetCenter = firstMultiTouch ? firstMultiTouch.center : firstTouch.center;
+		var firstTouch = session.firstTouch;
+		var firstMultiTouch = session.firstMultiTouch;
+		var offsetCenter = firstMultiTouch ? firstMultiTouch.center : firstTouch.center;
 
-// 		var center = touch.center = getMultiCenter(touches);
-// 		touch.timestamp = $.now();
-// 		touch.deltaTime = touch.timestamp - firstTouch.timestamp;
+		var center = touch.center = getMultiCenter(touches);
+		touch.timestamp = $.now();
+		touch.deltaTime = touch.timestamp - firstTouch.timestamp;
 
-// 		touch.angle = getAngle(offsetCenter, center);
-// 		touch.distance = getDistance(offsetCenter, center);
+		touch.angle = getAngle(offsetCenter, center);
+		touch.distance = getDistance(offsetCenter, center);
 
-// 		calDelta(touch);
+		calDelta(touch);
 
-// 		touch.offsetDirection = getDirection(touch.deltaX, touch.deltaY);
+		touch.offsetDirection = getDirection(touch.deltaX, touch.deltaY);
 
-// 		touch.scale = firstMultiTouch ? getScale(firstMultiTouch.touches, touches) : 1;
-// 		touch.rotation = firstMultiTouch ? getRotation(firstMultiTouch.touches, touches) : 0;
+		touch.scale = firstMultiTouch ? getScale(firstMultiTouch.touches, touches) : 1;
+		touch.rotation = firstMultiTouch ? getRotation(firstMultiTouch.touches, touches) : 0;
 
-// 		calIntervalTouchData(touch);
+		calIntervalTouchData(touch);
 
-// 	};
-// 	var CAL_INTERVAL = 25;
-// 	var calIntervalTouchData = function(touch) {
-// 		var session = $.gestures.session;
-// 		var last = session.lastInterval || touch;
-// 		var deltaTime = touch.timestamp - last.timestamp;
-// 		var velocity;
-// 		var velocityX;
-// 		var velocityY;
-// 		var direction;
+	};
+	var CAL_INTERVAL = 25;
+	var calIntervalTouchData = function(touch) {
+		var session = $.gestures.session;
+		var last = session.lastInterval || touch;
+		var deltaTime = touch.timestamp - last.timestamp;
+		var velocity;
+		var velocityX;
+		var velocityY;
+		var direction;
 
-// 		if (touch.gesture.type != $.EVENT_CANCEL && (deltaTime > CAL_INTERVAL || last.velocity === undefined)) {
-// 			var deltaX = last.deltaX - touch.deltaX;
-// 			var deltaY = last.deltaY - touch.deltaY;
+		if (touch.gesture.type != $.EVENT_CANCEL && (deltaTime > CAL_INTERVAL || last.velocity === undefined)) {
+			var deltaX = last.deltaX - touch.deltaX;
+			var deltaY = last.deltaY - touch.deltaY;
 
-// 			var v = getVelocity(deltaTime, deltaX, deltaY);
-// 			velocityX = v.x;
-// 			velocityY = v.y;
-// 			velocity = (abs(v.x) > abs(v.y)) ? v.x : v.y;
-// 			direction = getDirection(deltaX, deltaY);
+			var v = getVelocity(deltaTime, deltaX, deltaY);
+			velocityX = v.x;
+			velocityY = v.y;
+			velocity = (abs(v.x) > abs(v.y)) ? v.x : v.y;
+			direction = getDirection(deltaX, deltaY);
 
-// 			session.lastInterval = touch;
-// 		} else {
-// 			velocity = last.velocity;
-// 			velocityX = last.velocityX;
-// 			velocityY = last.velocityY;
-// 			direction = last.direction;
-// 		}
+			session.lastInterval = touch;
+		} else {
+			velocity = last.velocity;
+			velocityX = last.velocityX;
+			velocityY = last.velocityY;
+			direction = last.direction;
+		}
 
-// 		touch.velocity = velocity;
-// 		touch.velocityX = velocityX;
-// 		touch.velocityY = velocityY;
-// 		touch.direction = direction;
-// 	};
-// 	var getTouches = function(event, touch) {
-// 		var allTouches = $.slice.call(event.touches);
+		touch.velocity = velocity;
+		touch.velocityX = velocityX;
+		touch.velocityY = velocityY;
+		touch.direction = direction;
+	};
+	var getTouches = function(event, touch) {
+		var allTouches = $.slice.call(event.touches);
 
-// 		var type = event.type;
+		var type = event.type;
 
-// 		var targetTouches = [];
-// 		var changedTargetTouches = [];
-// 		$.gestures.session || ($.gestures.session = {
-// 			targetIds: {}
-// 		});
-// 		if ((type === $.EVENT_START || type === $.EVENT_MOVE) && allTouches.length === 1) {
-// 			if (type === $.EVENT_START) { //first
-// 				touch.isFirst = true;
-// 				$.gestures.touch = $.gestures.session = {
-// 					firstTarget: event.target,
-// 					targetIds: {}
-// 				};
-// 			}
-// 			var targetIds = $.gestures.session.targetIds;
-// 			targetIds[allTouches[0].identifier] = true;
-// 			targetTouches = allTouches;
-// 			changedTargetTouches = allTouches;
-// 			touch.target = event.target;
-// 		} else {
-// 			var i = 0;
-// 			var targetTouches = [];
-// 			var changedTargetTouches = [];
-// 			var targetIds = $.gestures.session.targetIds;
-// 			var changedTouches = $.slice.call(event.changedTouches);
+		var targetTouches = [];
+		var changedTargetTouches = [];
+		$.gestures.session || ($.gestures.session = {
+			targetIds: {}
+		});
+		if ((type === $.EVENT_START || type === $.EVENT_MOVE) && allTouches.length === 1) {
+			if (type === $.EVENT_START) { //first
+				touch.isFirst = true;
+				$.gestures.touch = $.gestures.session = {
+					firstTarget: event.target,
+					targetIds: {}
+				};
+			}
+			var targetIds = $.gestures.session.targetIds;
+			targetIds[allTouches[0].identifier] = true;
+			targetTouches = allTouches;
+			changedTargetTouches = allTouches;
+			touch.target = event.target;
+		} else {
+			var i = 0;
+			var targetTouches = [];
+			var changedTargetTouches = [];
+			var targetIds = $.gestures.session.targetIds;
+			var changedTouches = $.slice.call(event.changedTouches);
 
-// 			touch.target = event.target;
+			touch.target = event.target;
 
-// 			targetTouches = allTouches.filter(function(touch) {
-// 				return true; //return hasParent(touch.target, touch.firstTarget);
-// 			});
+			targetTouches = allTouches.filter(function(touch) {
+				return true; //return hasParent(touch.target, touch.firstTarget);
+			});
 
-// 			if (type === $.EVENT_START) {
-// 				i = 0;
-// 				while (i < targetTouches.length) {
-// 					targetIds[targetTouches[i].identifier] = true;
-// 					i++;
-// 				}
-// 			}
+			if (type === $.EVENT_START) {
+				i = 0;
+				while (i < targetTouches.length) {
+					targetIds[targetTouches[i].identifier] = true;
+					i++;
+				}
+			}
 
-// 			i = 0;
-// 			while (i < changedTouches.length) {
-// 				if (targetIds[changedTouches[i].identifier]) {
-// 					changedTargetTouches.push(changedTouches[i]);
-// 				}
-// 				if (type === $.EVENT_END || type === $.EVENT_CANCEL) {
-// 					delete targetIds[changedTouches[i].identifier];
-// 				}
-// 				i++;
-// 			}
+			i = 0;
+			while (i < changedTouches.length) {
+				if (targetIds[changedTouches[i].identifier]) {
+					changedTargetTouches.push(changedTouches[i]);
+				}
+				if (type === $.EVENT_END || type === $.EVENT_CANCEL) {
+					delete targetIds[changedTouches[i].identifier];
+				}
+				i++;
+			}
 
-// 			if (!changedTargetTouches.length) {
-// 				return false;
-// 			}
-// 		}
-// 		targetTouches = uniqueArray(targetTouches.concat(changedTargetTouches), 'identifier', true);
-// 		var touchesLength = targetTouches.length;
-// 		var changedTouchesLength = changedTargetTouches.length;
+			if (!changedTargetTouches.length) {
+				return false;
+			}
+		}
+		targetTouches = uniqueArray(targetTouches.concat(changedTargetTouches), 'identifier', true);
+		var touchesLength = targetTouches.length;
+		var changedTouchesLength = changedTargetTouches.length;
 
-// 		touch.isFinal = ((type === $.EVENT_END || type === $.EVENT_CANCEL) && (touchesLength - changedTouchesLength === 0));
+		touch.isFinal = ((type === $.EVENT_END || type === $.EVENT_CANCEL) && (touchesLength - changedTouchesLength === 0));
 
-// 		touch.touches = targetTouches;
-// 		touch.changedTouches = changedTargetTouches;
-// 		return true;
+		touch.touches = targetTouches;
+		touch.changedTouches = changedTargetTouches;
+		return true;
 
-// 	};
-// 	var handleTouchEvent = function(event) {
-// 		var touch = {
-// 			gesture: event
-// 		};
-// 		var touches = getTouches(event, touch);
-// 		if (!touches) {
-// 			return;
-// 		}
-// 		calTouchData(touch);
-// 		detect(event, touch);
-// 		$.gestures.session.prevTouch = touch;
-// 	};
-// 	window.addEventListener($.EVENT_START, handleTouchEvent);
-// 	window.addEventListener($.EVENT_MOVE, handleTouchEvent);
-// 	window.addEventListener($.EVENT_END, handleTouchEvent);
-// 	window.addEventListener($.EVENT_CANCEL, handleTouchEvent);
-// 	//fixed hashchange(android)
-// 	window.addEventListener($.EVENT_CLICK, function(e) {
-// 		//TODO 应该判断当前target是不是在targets.popover内部，而不是非要相等
-// 		if (($.targets.popover && e.target === $.targets.popover) || ($.targets.tab) || $.targets.offcanvas || $.targets.modal) {
-// 			e.preventDefault();
-// 		}
-// 	}, true);
+	};
+	var handleTouchEvent = function(event) {
+		var touch = {
+			gesture: event
+		};
+		var touches = getTouches(event, touch);
+		if (!touches) {
+			return;
+		}
+		calTouchData(touch);
+		detect(event, touch);
+		$.gestures.session.prevTouch = touch;
+	};
+	window.addEventListener($.EVENT_START, handleTouchEvent);
+	window.addEventListener($.EVENT_MOVE, handleTouchEvent);
+	window.addEventListener($.EVENT_END, handleTouchEvent);
+	window.addEventListener($.EVENT_CANCEL, handleTouchEvent);
+	//fixed hashchange(android)
+	window.addEventListener($.EVENT_CLICK, function(e) {
+		//TODO 应该判断当前target是不是在targets.popover内部，而不是非要相等
+		if (($.targets.popover && e.target === $.targets.popover) || ($.targets.tab) || $.targets.offcanvas || $.targets.modal) {
+			e.preventDefault();
+		}
+	}, true);
 
 
-// 	//增加原生滚动识别
-// 	$.isScrolling = false;
-// 	var scrollingTimeout = null;
-// 	window.addEventListener('scroll', function() {
-// 		$.isScrolling = true;
-// 		scrollingTimeout && clearTimeout(scrollingTimeout);
-// 		scrollingTimeout = setTimeout(function() {
-// 			$.isScrolling = false;
-// 		}, 250);
-// 	});
-// })(mui, window);
-// /**
-//  * mui gesture flick[left|right|up|down]
-//  * @param {type} $
-//  * @param {type} name
-//  * @returns {undefined}
-//  */
-// (function($, name) {
-// 	var flickStartTime = 0;
-// 	var handle = function(event, touch) {
-// 		var session = $.gestures.session;
-// 		var options = this.options;
-// 		var now = $.now();
-// 		switch (event.type) {
-// 			case $.EVENT_MOVE:
-// 				if (now - flickStartTime > 300) {
-// 					flickStartTime = now;
-// 					session.flickStart = touch.center;
-// 				}
-// 				break;
-// 			case $.EVENT_END:
-// 			case $.EVENT_CANCEL:
-// 				if (session.flickStart && options.flickMaxTime > (now - flickStartTime) && touch.distance > options.flickMinDistince) {
-// 					touch.flick = true;
-// 					touch.flickTime = now - flickStartTime;
-// 					touch.flickDistanceX = touch.center.x - session.flickStart.x;
-// 					touch.flickDistanceY = touch.center.y - session.flickStart.y;
-// 					$.trigger(event.target, name, touch);
-// 					$.trigger(event.target, name + touch.direction, touch);
-// 				}
-// 				break;
-// 		}
+	//增加原生滚动识别
+	$.isScrolling = false;
+	var scrollingTimeout = null;
+	window.addEventListener('scroll', function() {
+		$.isScrolling = true;
+		scrollingTimeout && clearTimeout(scrollingTimeout);
+		scrollingTimeout = setTimeout(function() {
+			$.isScrolling = false;
+		}, 250);
+	});
+})(nvui, window);
+/**
+ * nvui gesture flick[left|right|up|down]
+ * @param {type} $
+ * @param {type} name
+ * @returns {undefined}
+ */
+(function($, name) {
+	var flickStartTime = 0;
+	var handle = function(event, touch) {
+		var session = $.gestures.session;
+		var options = this.options;
+		var now = $.now();
+		switch (event.type) {
+			case $.EVENT_MOVE:
+				if (now - flickStartTime > 300) {
+					flickStartTime = now;
+					session.flickStart = touch.center;
+				}
+				break;
+			case $.EVENT_END:
+			case $.EVENT_CANCEL:
+				if (session.flickStart && options.flickMaxTime > (now - flickStartTime) && touch.distance > options.flickMinDistince) {
+					touch.flick = true;
+					touch.flickTime = now - flickStartTime;
+					touch.flickDistanceX = touch.center.x - session.flickStart.x;
+					touch.flickDistanceY = touch.center.y - session.flickStart.y;
+					$.trigger(event.target, name, touch);
+					$.trigger(event.target, name + touch.direction, touch);
+				}
+				break;
+		}
 
-// 	};
-// 	/**
-// 	 * mui gesture flick
-// 	 */
-// 	$.registerGesture({
-// 		name: name,
-// 		index: 5,
-// 		handle: handle,
-// 		options: {
-// 			flickMaxTime: 200,
-// 			flickMinDistince: 10
-// 		}
-// 	});
-// })(mui, 'flick');
-// /**
-//  * mui gesture swipe[left|right|up|down]
-//  * @param {type} $
-//  * @param {type} name
-//  * @returns {undefined}
-//  */
-// (function($, name) {
-// 	var handle = function(event, touch) {
-// 		if (event.type === $.EVENT_END || event.type === $.EVENT_CANCEL) {
-// 			var options = this.options;
-// 			if (touch.direction && options.swipeMaxTime > touch.deltaTime && touch.distance > options.swipeMinDistince) {
-// 				touch.swipe = true;
-// 				$.trigger(event.target, name, touch);
-// 				$.trigger(event.target, name + touch.direction, touch);
-// 			}
-// 		}
-// 	};
-// 	/**
-// 	 * mui gesture swipe
-// 	 */
-// 	$.registerGesture({
-// 		name: name,
-// 		index: 10,
-// 		handle: handle,
-// 		options: {
-// 			swipeMaxTime: 300,
-// 			swipeMinDistince: 18
-// 		}
-// 	});
-// })(mui, 'swipe');
-// /**
-//  * mui gesture drag[start|left|right|up|down|end]
-//  * @param {type} $
-//  * @param {type} name
-//  * @returns {undefined}
-//  */
-// (function($, name) {
-// 	var handle = function(event, touch) {
-// 		var session = $.gestures.session;
-// 		switch (event.type) {
-// 			case $.EVENT_START:
-// 				break;
-// 			case $.EVENT_MOVE:
-// 				if (!touch.direction) {
-// 					return;
-// 				}
-// 				//修正direction,可在session期间自行锁定拖拽方向，方便开发scroll类不同方向拖拽插件嵌套
-// 				if (session.lockDirection && session.startDirection) {
-// 					if (session.startDirection && session.startDirection !== touch.direction) {
-// 						if (session.startDirection === 'up' || session.startDirection === 'down') {
-// 							touch.direction = touch.deltaY < 0 ? 'up' : 'down';
-// 						} else {
-// 							touch.direction = touch.deltaX < 0 ? 'left' : 'right';
-// 						}
-// 					}
-// 				}
+	};
+	/**
+	 * nvui gesture flick
+	 */
+	$.registerGesture({
+		name: name,
+		index: 5,
+		handle: handle,
+		options: {
+			flickMaxTime: 200,
+			flickMinDistince: 10
+		}
+	});
+})(nvui, 'flick');
+/**
+ * nvui gesture swipe[left|right|up|down]
+ * @param {type} $
+ * @param {type} name
+ * @returns {undefined}
+ */
+(function($, name) {
+	var handle = function(event, touch) {
+		if (event.type === $.EVENT_END || event.type === $.EVENT_CANCEL) {
+			var options = this.options;
+			if (touch.direction && options.swipeMaxTime > touch.deltaTime && touch.distance > options.swipeMinDistince) {
+				touch.swipe = true;
+				$.trigger(event.target, name, touch);
+				$.trigger(event.target, name + touch.direction, touch);
+			}
+		}
+	};
+	/**
+	 * nvui gesture swipe
+	 */
+	$.registerGesture({
+		name: name,
+		index: 10,
+		handle: handle,
+		options: {
+			swipeMaxTime: 300,
+			swipeMinDistince: 18
+		}
+	});
+})(nvui, 'swipe');
+/**
+ * nvui gesture drag[start|left|right|up|down|end]
+ * @param {type} $
+ * @param {type} name
+ * @returns {undefined}
+ */
+(function($, name) {
+	var handle = function(event, touch) {
+		var session = $.gestures.session;
+		switch (event.type) {
+			case $.EVENT_START:
+				break;
+			case $.EVENT_MOVE:
+				if (!touch.direction) {
+					return;
+				}
+				//修正direction,可在session期间自行锁定拖拽方向，方便开发scroll类不同方向拖拽插件嵌套
+				if (session.lockDirection && session.startDirection) {
+					if (session.startDirection && session.startDirection !== touch.direction) {
+						if (session.startDirection === 'up' || session.startDirection === 'down') {
+							touch.direction = touch.deltaY < 0 ? 'up' : 'down';
+						} else {
+							touch.direction = touch.deltaX < 0 ? 'left' : 'right';
+						}
+					}
+				}
 
-// 				if (!session.drag) {
-// 					session.drag = true;
-// 					$.trigger(event.target, name + 'start', touch);
-// 				}
-// 				$.trigger(event.target, name, touch);
-// 				$.trigger(event.target, name + touch.direction, touch);
-// 				break;
-// 			case $.EVENT_END:
-// 			case $.EVENT_CANCEL:
-// 				if (session.drag && touch.isFinal) {
-// 					$.trigger(event.target, name + 'end', touch);
-// 				}
-// 				break;
-// 		}
-// 	};
-// 	/**
-// 	 * mui gesture drag
-// 	 */
-// 	$.registerGesture({
-// 		name: name,
-// 		index: 20,
-// 		handle: handle,
-// 		options: {
-// 			fingers: 1
-// 		}
-// 	});
-// })(mui, 'drag');
-// /**
-//  * mui gesture tap and doubleTap
-//  * @param {type} $
-//  * @param {type} name
-//  * @returns {undefined}
-//  */
-// (function($, name) {
-// 	var lastTarget;
-// 	var lastTapTime;
-// 	var handle = function(event, touch) {
-// 		var options = this.options;
-// 		switch (event.type) {
-// 			case $.EVENT_END:
-// 				if (!touch.isFinal) {
-// 					return;
-// 				}
-// 				var target = event.target;
-// 				if (!target || (target.disabled || target.classList.contains('mui-disabled'))) {
-// 					return;
-// 				}
-// 				if (touch.distance < options.tapMaxDistance && touch.deltaTime < options.tapMaxTime) {
-// 					if ($.options.gestureConfig.doubletap && lastTarget && (lastTarget === target)) { //same target
-// 						if (lastTapTime && (touch.timestamp - lastTapTime) < options.tapMaxInterval) {
-// 							$.trigger(target, 'doubletap', touch);
-// 							lastTapTime = $.now();
-// 							lastTarget = target;
-// 							return;
-// 						}
-// 					}
-// 					$.trigger(target, name, touch);
-// 					lastTapTime = $.now();
-// 					lastTarget = event.target;
-// 				}
-// 				break;
-// 		}
-// 	};
-// 	/**
-// 	 * mui gesture tap
-// 	 */
-// 	$.registerGesture({
-// 		name: name,
-// 		index: 30,
-// 		handle: handle,
-// 		options: {
-// 			fingers: 1,
-// 			tapMaxInterval: 300,
-// 			tapMaxDistance: 5,
-// 			tapMaxTime: 250
-// 		}
-// 	});
-// })(mui, 'tap');
-// /**
-//  * mui gesture longtap
-//  * @param {type} $
-//  * @param {type} name
-//  * @returns {undefined}
-//  */
-// (function($, name) {
-// 	var timer;
-// 	var handle = function(event, touch) {
-// 		var options = this.options;
-// 		switch (event.type) {
-// 			case $.EVENT_START:
-// 				clearTimeout(timer);
-// 				timer = setTimeout(function() {
-// 					$.trigger(event.target, name, touch);
-// 				}, options.holdTimeout);
-// 				break;
-// 			case $.EVENT_MOVE:
-// 				if (touch.distance > options.holdThreshold) {
-// 					clearTimeout(timer);
-// 				}
-// 				break;
-// 			case $.EVENT_END:
-// 			case $.EVENT_CANCEL:
-// 				clearTimeout(timer);
-// 				break;
-// 		}
-// 	};
-// 	/**
-// 	 * mui gesture longtap
-// 	 */
-// 	$.registerGesture({
-// 		name: name,
-// 		index: 10,
-// 		handle: handle,
-// 		options: {
-// 			fingers: 1,
-// 			holdTimeout: 500,
-// 			holdThreshold: 2
-// 		}
-// 	});
-// })(mui, 'longtap');
-// /**
-//  * mui gesture hold
-//  * @param {type} $
-//  * @param {type} name
-//  * @returns {undefined}
-//  */
-// (function($, name) {
-// 	var timer;
-// 	var handle = function(event, touch) {
-// 		var options = this.options;
-// 		switch (event.type) {
-// 			case $.EVENT_START:
-// 				if ($.options.gestureConfig.hold) {
-// 					timer && clearTimeout(timer);
-// 					timer = setTimeout(function() {
-// 						touch.hold = true;
-// 						$.trigger(event.target, name, touch);
-// 					}, options.holdTimeout);
-// 				}
-// 				break;
-// 			case $.EVENT_MOVE:
-// 				break;
-// 			case $.EVENT_END:
-// 			case $.EVENT_CANCEL:
-// 				if (timer) {
-// 					clearTimeout(timer) && (timer = null);
-// 					$.trigger(event.target, 'release', touch);
-// 				}
-// 				break;
-// 		}
-// 	};
-// 	/**
-// 	 * mui gesture hold
-// 	 */
-// 	$.registerGesture({
-// 		name: name,
-// 		index: 10,
-// 		handle: handle,
-// 		options: {
-// 			fingers: 1,
-// 			holdTimeout: 0
-// 		}
-// 	});
-// })(mui, 'hold');
-// /**
-//  * mui gesture pinch
-//  * @param {type} $
-//  * @param {type} name
-//  * @returns {undefined}
-//  */
-// (function($, name) {
-// 	var handle = function(event, touch) {
-// 		var options = this.options;
-// 		var session = $.gestures.session;
-// 		switch (event.type) {
-// 			case $.EVENT_START:
-// 				break;
-// 			case $.EVENT_MOVE:
-// 				if ($.options.gestureConfig.pinch) {
-// 					if (touch.touches.length < 2) {
-// 						return;
-// 					}
-// 					if (!session.pinch) { //start
-// 						session.pinch = true;
-// 						$.trigger(event.target, name + 'start', touch);
-// 					}
-// 					$.trigger(event.target, name, touch);
-// 					var scale = touch.scale;
-// 					var rotation = touch.rotation;
-// 					var lastScale = typeof touch.lastScale === 'undefined' ? 1 : touch.lastScale;
-// 					var scaleDiff = 0.000000000001; //防止scale与lastScale相等，不触发事件的情况。
-// 					if (scale > lastScale) { //out
-// 						lastScale = scale - scaleDiff;
-// 						$.trigger(event.target, name + 'out', touch);
-// 					} //in
-// 					else if (scale < lastScale) {
-// 						lastScale = scale + scaleDiff;
-// 						$.trigger(event.target, name + 'in', touch);
-// 					}
-// 					if (Math.abs(rotation) > options.minRotationAngle) {
-// 						$.trigger(event.target, 'rotate', touch);
-// 					}
-// 				}
-// 				break;
-// 			case $.EVENT_END:
-// 			case $.EVENT_CANCEL:
-// 				if ($.options.gestureConfig.pinch && session.pinch && touch.touches.length === 2) {
-// 					$.trigger(event.target, name + 'end', touch);
-// 				}
-// 				break;
-// 		}
-// 	};
-// 	/**
-// 	 * mui gesture pinch
-// 	 */
-// 	$.registerGesture({
-// 		name: name,
-// 		index: 10,
-// 		handle: handle,
-// 		options: {
-// 			minRotationAngle: 0
-// 		}
-// 	});
-// })(mui, 'pinch');
+				if (!session.drag) {
+					session.drag = true;
+					$.trigger(event.target, name + 'start', touch);
+				}
+				$.trigger(event.target, name, touch);
+				$.trigger(event.target, name + touch.direction, touch);
+				break;
+			case $.EVENT_END:
+			case $.EVENT_CANCEL:
+				if (session.drag && touch.isFinal) {
+					$.trigger(event.target, name + 'end', touch);
+				}
+				break;
+		}
+	};
+	/**
+	 * nvui gesture drag
+	 */
+	$.registerGesture({
+		name: name,
+		index: 20,
+		handle: handle,
+		options: {
+			fingers: 1
+		}
+	});
+})(nvui, 'drag');
+/**
+ * nvui gesture tap and doubleTap
+ * @param {type} $
+ * @param {type} name
+ * @returns {undefined}
+ */
+(function($, name) {
+	var lastTarget;
+	var lastTapTime;
+	var handle = function(event, touch) {
+		var options = this.options;
+		switch (event.type) {
+			case $.EVENT_END:
+				if (!touch.isFinal) {
+					return;
+				}
+				var target = event.target;
+				if (!target || (target.disabled || target.classList.contains('nvui-disabled'))) {
+					return;
+				}
+				if (touch.distance < options.tapMaxDistance && touch.deltaTime < options.tapMaxTime) {
+					if ($.options.gestureConfig.doubletap && lastTarget && (lastTarget === target)) { //same target
+						if (lastTapTime && (touch.timestamp - lastTapTime) < options.tapMaxInterval) {
+							$.trigger(target, 'doubletap', touch);
+							lastTapTime = $.now();
+							lastTarget = target;
+							return;
+						}
+					}
+					$.trigger(target, name, touch);
+					lastTapTime = $.now();
+					lastTarget = event.target;
+				}
+				break;
+		}
+	};
+	/**
+	 * nvui gesture tap
+	 */
+	$.registerGesture({
+		name: name,
+		index: 30,
+		handle: handle,
+		options: {
+			fingers: 1,
+			tapMaxInterval: 300,
+			tapMaxDistance: 5,
+			tapMaxTime: 250
+		}
+	});
+})(nvui, 'tap');
+/**
+ * nvui gesture longtap
+ * @param {type} $
+ * @param {type} name
+ * @returns {undefined}
+ */
+(function($, name) {
+	var timer;
+	var handle = function(event, touch) {
+		var options = this.options;
+		switch (event.type) {
+			case $.EVENT_START:
+				clearTimeout(timer);
+				timer = setTimeout(function() {
+					$.trigger(event.target, name, touch);
+				}, options.holdTimeout);
+				break;
+			case $.EVENT_MOVE:
+				if (touch.distance > options.holdThreshold) {
+					clearTimeout(timer);
+				}
+				break;
+			case $.EVENT_END:
+			case $.EVENT_CANCEL:
+				clearTimeout(timer);
+				break;
+		}
+	};
+	/**
+	 * nvui gesture longtap
+	 */
+	$.registerGesture({
+		name: name,
+		index: 10,
+		handle: handle,
+		options: {
+			fingers: 1,
+			holdTimeout: 500,
+			holdThreshold: 2
+		}
+	});
+})(nvui, 'longtap');
+/**
+ * nvui gesture hold
+ * @param {type} $
+ * @param {type} name
+ * @returns {undefined}
+ */
+(function($, name) {
+	var timer;
+	var handle = function(event, touch) {
+		var options = this.options;
+		switch (event.type) {
+			case $.EVENT_START:
+				if ($.options.gestureConfig.hold) {
+					timer && clearTimeout(timer);
+					timer = setTimeout(function() {
+						touch.hold = true;
+						$.trigger(event.target, name, touch);
+					}, options.holdTimeout);
+				}
+				break;
+			case $.EVENT_MOVE:
+				break;
+			case $.EVENT_END:
+			case $.EVENT_CANCEL:
+				if (timer) {
+					clearTimeout(timer) && (timer = null);
+					$.trigger(event.target, 'release', touch);
+				}
+				break;
+		}
+	};
+	/**
+	 * nvui gesture hold
+	 */
+	$.registerGesture({
+		name: name,
+		index: 10,
+		handle: handle,
+		options: {
+			fingers: 1,
+			holdTimeout: 0
+		}
+	});
+})(nvui, 'hold');
+/**
+ * nvui gesture pinch
+ * @param {type} $
+ * @param {type} name
+ * @returns {undefined}
+ */
+(function($, name) {
+	var handle = function(event, touch) {
+		var options = this.options;
+		var session = $.gestures.session;
+		switch (event.type) {
+			case $.EVENT_START:
+				break;
+			case $.EVENT_MOVE:
+				if ($.options.gestureConfig.pinch) {
+					if (touch.touches.length < 2) {
+						return;
+					}
+					if (!session.pinch) { //start
+						session.pinch = true;
+						$.trigger(event.target, name + 'start', touch);
+					}
+					$.trigger(event.target, name, touch);
+					var scale = touch.scale;
+					var rotation = touch.rotation;
+					var lastScale = typeof touch.lastScale === 'undefined' ? 1 : touch.lastScale;
+					var scaleDiff = 0.000000000001; //防止scale与lastScale相等，不触发事件的情况。
+					if (scale > lastScale) { //out
+						lastScale = scale - scaleDiff;
+						$.trigger(event.target, name + 'out', touch);
+					} //in
+					else if (scale < lastScale) {
+						lastScale = scale + scaleDiff;
+						$.trigger(event.target, name + 'in', touch);
+					}
+					if (Math.abs(rotation) > options.minRotationAngle) {
+						$.trigger(event.target, 'rotate', touch);
+					}
+				}
+				break;
+			case $.EVENT_END:
+			case $.EVENT_CANCEL:
+				if ($.options.gestureConfig.pinch && session.pinch && touch.touches.length === 2) {
+					$.trigger(event.target, name + 'end', touch);
+				}
+				break;
+		}
+	};
+	/**
+	 * nvui gesture pinch
+	 */
+	$.registerGesture({
+		name: name,
+		index: 10,
+		handle: handle,
+		options: {
+			minRotationAngle: 0
+		}
+	});
+})(nvui, 'pinch');
 
 /**
  * nvui.init
  * @param {type} $
  * @returns {undefined}
  */
-// (function($) {
-// 	$.global = $.options = {
-// 		gestureConfig: {
-// 			tap: true,
-// 			doubletap: false,
-// 			longtap: false,
-// 			hold: false,
-// 			flick: true,
-// 			swipe: true,
-// 			drag: true,
-// 			pinch: false
-// 		}
-// 	};
-// 	/**
-// 	 *
-// 	 * @param {type} options
-// 	 * @returns {undefined}
-// 	 */
-// 	$.initGlobal = function(options) {
-// 		$.options = $.extend(true, $.global, options);
-// 		return this;
-// 	};
-// 	var inits = {};
+(function($) {
+	$.global = $.options = {
+		gestureConfig: {
+			tap: true,
+			doubletap: false,
+			longtap: false,
+			hold: false,
+			flick: true,
+			swipe: true,
+			drag: true,
+			pinch: false
+		}
+	};
+	/**
+	 *
+	 * @param {type} options
+	 * @returns {undefined}
+	 */
+	$.initGlobal = function(options) {
+		$.options = $.extend(true, $.global, options);
+		return this;
+	};
+	var inits = {};
 
-// 	var isInitialized = false;
-// 	//TODO 自动调用init?因为用户自己调用init的时机可能不确定，如果晚于自动init，则会有潜在问题
-// 	//	$.ready(function() {
-// 	//		setTimeout(function() {
-// 	//			if (!isInitialized) {
-// 	//				$.init();
-// 	//			}
-// 	//		}, 300);
-// 	//	});
-// 	/**
-// 	 * 单页配置 初始化
-// 	 * @param {object} options
-// 	 */
-// 	$.init = function(options) {
-// 		isInitialized = true;
-// 		$.options = $.extend(true, $.global, options || {});
-// 		$.ready(function() {
-// 			$.each($.inits, function(index, init) {
-// 				var isInit = !!(!inits[init.name] || init.repeat);
-// 				if (isInit) {
-// 					init.handle.call($);
-// 					inits[init.name] = true;
-// 				}
-// 			});
-// 		});
-// 		return this;
-// 	};
+	var isInitialized = false;
+	//TODO 自动调用init?因为用户自己调用init的时机可能不确定，如果晚于自动init，则会有潜在问题
+	//	$.ready(function() {
+	//		setTimeout(function() {
+	//			if (!isInitialized) {
+	//				$.init();
+	//			}
+	//		}, 300);
+	//	});
+	/**
+	 * 单页配置 初始化
+	 * @param {object} options
+	 */
+	$.init = function(options) {
+		isInitialized = true;
+		$.options = $.extend(true, $.global, options || {});
+		$.ready(function() {
+			$.each($.inits, function(index, init) {
+				var isInit = !!(!inits[init.name] || init.repeat);
+				if (isInit) {
+					init.handle.call($);
+					inits[init.name] = true;
+				}
+			});
+		});
+		return this;
+	};
 
-// 	/**
-// 	 * 增加初始化执行流程
-// 	 * @param {function} init
-// 	 */
-// 	$.registerInit = function(init) {
-// 		return $.registerHandler('inits', init);
-// 	};
-// 	$(function() {
-// 		var classList = document.body.classList;
-// 		var os = [];
-// 		if ($.os.ios) {
-// 			os.push({
-// 				os: 'ios',
-// 				version: $.os.version
-// 			});
-// 			classList.add('mui-ios');
-// 		} else if ($.os.android) {
-// 			os.push({
-// 				os: 'android',
-// 				version: $.os.version
-// 			});
-// 			classList.add('mui-android');
-// 		}
-// 		if ($.os.wechat) {
-// 			os.push({
-// 				os: 'wechat',
-// 				version: $.os.wechat.version
-// 			});
-// 			classList.add('mui-wechat');
-// 		}
-// 		if (os.length) {
-// 			$.each(os, function(index, osObj) {
-// 				var version = '';
-// 				var classArray = [];
-// 				if (osObj.version) {
-// 					$.each(osObj.version.split('.'), function(i, v) {
-// 						version = version + (version ? '-' : '') + v;
-// 						classList.add($.className(osObj.os + '-' + version));
-// 					});
-// 				}
-// 			});
-// 		}
-// 	});
-// })(nvui);
+	/**
+	 * 增加初始化执行流程
+	 * @param {function} init
+	 */
+	$.registerInit = function(init) {
+		return $.registerHandler('inits', init);
+	};
+	$(function() {
+		var classList = document.body.classList;
+		var os = [];
+		if ($.os.ios) {
+			os.push({
+				os: 'ios',
+				version: $.os.version
+			});
+			classList.add('nvui-ios');
+		} else if ($.os.android) {
+			os.push({
+				os: 'android',
+				version: $.os.version
+			});
+			classList.add('nvui-android');
+		}
+		if ($.os.wechat) {
+			os.push({
+				os: 'wechat',
+				version: $.os.wechat.version
+			});
+			classList.add('nvui-wechat');
+		}
+		if (os.length) {
+			$.each(os, function(index, osObj) {
+				var version = '';
+				var classArray = [];
+				if (osObj.version) {
+					$.each(osObj.version.split('.'), function(i, v) {
+						version = version + (version ? '-' : '') + v;
+						classList.add($.className(osObj.os + '-' + version));
+					});
+				}
+			});
+		}
+	});
+})(nvui);
 // /**
-//  * mui.init 5+
+//  * nvui.init 5+
 //  * @param {type} $
 //  * @returns {undefined}
 //  */
@@ -1891,7 +1891,7 @@ window.$ = nvui;
 // 	 */
 // 	$.fire = function(webview, eventType, data) {
 // 		if (webview) {
-// 			webview.evalJS("typeof mui!=='undefined'&&mui.receive('" + eventType + "','" + JSON.stringify(data || {}).replace(/\'/g, "\\u0027").replace(/\\/g, "\\u005c") + "')");
+// 			webview.evalJS("typeof nvui!=='undefined'&&nvui.receive('" + eventType + "','" + JSON.stringify(data || {}).replace(/\'/g, "\\u0027").replace(/\\/g, "\\u005c") + "')");
 // 		}
 // 	};
 // 	/**
@@ -1975,7 +1975,7 @@ window.$ = nvui;
 // 				webview = $.createWindow(options);
 // 			}
 // 			//每次show都需要传递动画参数；
-// 			//预加载的动画参数优先级：openWindow配置>preloadPages配置>mui默认配置；
+// 			//预加载的动画参数优先级：openWindow配置>preloadPages配置>nvui默认配置；
 // 			nShow = webviewCache.show;
 // 			nShow = options.show ? $.extend(nShow, options.show) : nShow;
 // 			webview.show(nShow.aniShow, nShow.duration, function() {
@@ -2236,13 +2236,13 @@ window.$ = nvui;
 // 			} else {
 // 				if (subpages.length > 0) {
 // 					var err = document.createElement('div');
-// 					err.className = 'mui-error';
+// 					err.className = 'nvui-error';
 // 					//文字描述
 // 					var span = document.createElement('span');
 // 					span.innerHTML = '在该浏览器下，不支持创建子页面，具体参考';
 // 					err.appendChild(span);
 // 					var a = document.createElement('a');
-// 					a.innerHTML = '"mui框架适用场景"';
+// 					a.innerHTML = '"nvui框架适用场景"';
 // 					a.href = 'http://ask.dcloud.net.cn/article/113';
 // 					err.appendChild(a);
 // 					document.body.appendChild(err);
@@ -2267,7 +2267,7 @@ window.$ = nvui;
 // 	});
 // })(nvui);
 // /**
-//  * mui back
+//  * nvui back
 //  * @param {type} $
 //  * @param {type} window
 //  * @returns {undefined}
@@ -2310,7 +2310,7 @@ window.$ = nvui;
 // 	};
 // 	window.addEventListener('tap', function(e) {
 // 		var action = $.targets.action;
-// 		if (action && action.classList.contains('mui-action-back')) {
+// 		if (action && action.classList.contains('nvui-action-back')) {
 // 			$.back();
 // 		}
 // 	});
@@ -2322,7 +2322,7 @@ window.$ = nvui;
 // 	});
 // })(nvui, window);
 // /**
-//  * mui back 5+
+//  * nvui back 5+
 //  * @param {type} $
 //  * @param {type} window
 //  * @returns {undefined}
@@ -2330,16 +2330,16 @@ window.$ = nvui;
 // (function($, window) {
 // 	if ($.os.plus && $.os.android) {
 // 		$.registerBack({
-// 			name: 'mui',
+// 			name: 'nvui',
 // 			index: 5,
 // 			handle: function() {
 // 				//popover
-// 				if ($.targets._popover && $.targets._popover.classList.contains('mui-active')) {
+// 				if ($.targets._popover && $.targets._popover.classList.contains('nvui-active')) {
 // 					$($.targets._popover).popover('hide');
 // 					return true;
 // 				}
 // 				//offcanvas
-// 				var offCanvas = document.querySelector('.mui-off-canvas-wrap.mui-active');
+// 				var offCanvas = document.querySelector('.nvui-off-canvas-wrap.nvui-active');
 // 				if (offCanvas) {
 // 					$(offCanvas).offCanvas('close');
 // 					return true;
@@ -2365,7 +2365,7 @@ window.$ = nvui;
 // 			var wobj = plus.webview.currentWebview();
 // 			var parent = wobj.parent();
 // 			if (parent) {
-// 				parent.evalJS('mui&&mui.back();');
+// 				parent.evalJS('nvui&&nvui.back();');
 // 			} else {
 // 				wobj.canBack(function(e) {
 // 					//by chb 暂时注释，在碰到类似popover之类的锚点的时候，需多次点击才能返回；
@@ -2394,7 +2394,7 @@ window.$ = nvui;
 
 
 // 	$.menu = function() {
-// 		var menu = document.querySelector('.mui-action-menu');
+// 		var menu = document.querySelector('.nvui-action-menu');
 // 		if (menu) {
 // 			$.trigger(menu, 'touchstart'); //临时处理menu无touchstart的话，找不到当前targets的问题
 // 			$.trigger(menu, 'tap');
@@ -2403,7 +2403,7 @@ window.$ = nvui;
 // 				var wobj = $.currentWebview;
 // 				var parent = wobj.parent();
 // 				if (parent) { //又得evalJS
-// 					parent.evalJS('mui&&mui.menu();');
+// 					parent.evalJS('nvui&&nvui.menu();');
 // 				}
 // 			}
 // 		}
@@ -2441,7 +2441,7 @@ window.$ = nvui;
 // 	});
 // })(nvui, window);
 // /**
-//  * mui.init pulldownRefresh
+//  * nvui.init pulldownRefresh
 //  * @param {type} $
 //  * @returns {undefined}
 //  */
@@ -2484,7 +2484,7 @@ window.$ = nvui;
 // 										downOptions.down = $.extend({}, pullRefreshOptions.down);
 // 										downOptions.down.callback = '_CALLBACK';
 // 										//父页面初始化pulldown
-// 										parent.evalJS("mui&&mui(document.querySelector('.mui-content')).pullRefresh('" + JSON.stringify(downOptions) + "')");
+// 										parent.evalJS("nvui&&nvui(document.querySelector('.nvui-content')).pullRefresh('" + JSON.stringify(downOptions) + "')");
 // 									}
 // 								}
 // 							});
@@ -2608,288 +2608,288 @@ window.$ = nvui;
 	$.Class = Class;
 })(nvui);
 
-// /**
-//  * Popovers
-//  * @param {type} $
-//  * @param {type} window
-//  * @param {type} document
-//  * @param {type} name
-//  * @param {type} undefined
-//  * @returns {undefined}
-//  */
-// (function($, window, document, name) {
+/**
+ * Popovers
+ * @param {type} $
+ * @param {type} window
+ * @param {type} document
+ * @param {type} name
+ * @param {type} undefined
+ * @returns {undefined}
+ */
+(function($, window, document, name) {
 
-// 	var CLASS_POPOVER = 'mui-popover';
-// 	var CLASS_POPOVER_ARROW = 'mui-popover-arrow';
-// 	var CLASS_ACTION_POPOVER = 'mui-popover-action';
-// 	var CLASS_BACKDROP = 'mui-backdrop';
-// 	var CLASS_BAR_POPOVER = 'mui-bar-popover';
-// 	var CLASS_BAR_BACKDROP = 'mui-bar-backdrop';
-// 	var CLASS_ACTION_BACKDROP = 'mui-backdrop-action';
-// 	var CLASS_ACTIVE = 'mui-active';
-// 	var CLASS_BOTTOM = 'mui-bottom';
-
-
-
-// 	var handle = function(event, target) {
-// 		if (target.tagName === 'A' && target.hash) {
-// 			$.targets._popover = document.getElementById(target.hash.replace('#', ''));
-// 			if ($.targets._popover && $.targets._popover.classList.contains(CLASS_POPOVER)) {
-// 				return target;
-// 			} else {
-// 				$.targets._popover = null;
-// 			}
-// 		}
-// 		return false;
-// 	};
-
-// 	$.registerTarget({
-// 		name: name,
-// 		index: 60,
-// 		handle: handle,
-// 		target: false,
-// 		isReset: false,
-// 		isContinue: true
-// 	});
-
-// 	var fixedPopoverScroll = function(isPopoverScroll) {
-// 		//		if (isPopoverScroll) {
-// 		//			document.body.setAttribute('style', 'overflow:hidden;');
-// 		//		} else {
-// 		//			document.body.setAttribute('style', '');
-// 		//		}
-// 	};
-// 	var onPopoverShown = function(e) {
-// 		this.removeEventListener('webkitTransitionEnd', onPopoverShown);
-// 		this.addEventListener('touchmove', $.preventDefault);
-// 		$.trigger(this, 'shown', this);
-// 	}
-// 	var onPopoverHidden = function(e) {
-// 		setStyle(this, 'none');
-// 		this.removeEventListener('webkitTransitionEnd', onPopoverHidden);
-// 		this.removeEventListener('touchmove', $.preventDefault);
-// 		fixedPopoverScroll(false);
-// 		$.trigger(this, 'hidden', this);
-// 	};
-
-// 	var backdrop = (function() {
-// 		var element = document.createElement('div');
-// 		element.classList.add(CLASS_BACKDROP);
-// 		element.addEventListener('touchmove', $.preventDefault);
-// 		element.addEventListener('tap', function(e) {
-// 			var popover = $.targets._popover;
-// 			if (popover) {
-// 				popover.addEventListener('webkitTransitionEnd', onPopoverHidden);
-// 				popover.classList.remove(CLASS_ACTIVE);
-// 				removeBackdrop(popover);
-// 				document.body.setAttribute('style', ''); //webkitTransitionEnd有时候不触发？
-// 			}
-// 		});
-
-// 		return element;
-// 	}());
-// 	var removeBackdrop = function(popover) {
-// 		backdrop.setAttribute('style', 'opacity:0');
-// 		$.targets.popover = $.targets._popover = null; //reset
-// 		setTimeout(function() {
-// 			if (!popover.classList.contains(CLASS_ACTIVE) && backdrop.parentNode && backdrop.parentNode === document.body) {
-// 				document.body.removeChild(backdrop);
-// 			}
-// 		}, 350);
-// 	};
-// 	window.addEventListener('tap', function(e) {
-// 		if (!$.targets.popover) {
-// 			return;
-// 		}
-// 		var toggle = false;
-// 		var target = e.target;
-// 		for (; target && target !== document; target = target.parentNode) {
-// 			if (target === $.targets.popover) {
-// 				toggle = true;
-// 			}
-// 		}
-// 		if (toggle) {
-// 			e.detail.gesture.preventDefault(); //fixed hashchange
-// 			togglePopover($.targets._popover, $.targets.popover);
-// 		}
-
-// 	});
-
-// 	var togglePopover = function(popover, anchor) {
-// 		//remove一遍，以免来回快速切换，导致webkitTransitionEnd不触发，无法remove
-// 		popover.removeEventListener('webkitTransitionEnd', onPopoverShown);
-// 		popover.removeEventListener('webkitTransitionEnd', onPopoverHidden);
-// 		backdrop.classList.remove(CLASS_BAR_BACKDROP);
-// 		backdrop.classList.remove(CLASS_ACTION_BACKDROP);
-// 		var _popover = document.querySelector('.mui-popover.mui-active');
-// 		if (_popover) {
-// 			//			_popover.setAttribute('style', '');
-// 			_popover.addEventListener('webkitTransitionEnd', onPopoverHidden);
-// 			_popover.classList.remove(CLASS_ACTIVE);
-// 			//			_popover.removeEventListener('webkitTransitionEnd', onPopoverHidden);
-// 			//			fixedPopoverScroll(false);
-// 			//同一个弹出则直接返回，解决同一个popover的toggle
-// 			if (popover === _popover) {
-// 				removeBackdrop(_popover);
-// 				return;
-// 			}
-// 		}
-// 		var isActionSheet = false;
-// 		if (popover.classList.contains(CLASS_BAR_POPOVER) || popover.classList.contains(CLASS_ACTION_POPOVER)) { //navBar
-// 			if (popover.classList.contains(CLASS_ACTION_POPOVER)) { //action sheet popover
-// 				isActionSheet = true;
-// 				backdrop.classList.add(CLASS_ACTION_BACKDROP);
-// 			} else { //bar popover
-// 				backdrop.classList.add(CLASS_BAR_BACKDROP);
-// 				//				if (anchor) {
-// 				//					if (anchor.parentNode) {
-// 				//						var offsetWidth = anchor.offsetWidth;
-// 				//						var offsetLeft = anchor.offsetLeft;
-// 				//						var innerWidth = window.innerWidth;
-// 				//						popover.style.left = (Math.min(Math.max(offsetLeft, defaultPadding), innerWidth - offsetWidth - defaultPadding)) + "px";
-// 				//					} else {
-// 				//						//TODO anchor is position:{left,top,bottom,right}
-// 				//					}
-// 				//				}
-// 			}
-// 		}
-// 		setStyle(popover, 'block'); //actionsheet transform
-// 		popover.offsetHeight;
-// 		popover.classList.add(CLASS_ACTIVE);
-// 		backdrop.setAttribute('style', '');
-// 		document.body.appendChild(backdrop);
-// 		fixedPopoverScroll(true);
-// 		calPosition(popover, anchor, isActionSheet); //position
-// 		backdrop.classList.add(CLASS_ACTIVE);
-// 		popover.addEventListener('webkitTransitionEnd', onPopoverShown);
-// 	};
-// 	var setStyle = function(popover, display, top, left) {
-// 		var style = popover.style;
-// 		if (typeof display !== 'undefined')
-// 			style.display = display;
-// 		if (typeof top !== 'undefined')
-// 			style.top = top + 'px';
-// 		if (typeof left !== 'undefined')
-// 			style.left = left + 'px';
-// 	};
-// 	var calPosition = function(popover, anchor, isActionSheet) {
-// 		if (!popover || !anchor) {
-// 			return;
-// 		}
-
-// 		if (isActionSheet) { //actionsheet
-// 			setStyle(popover, 'block')
-// 			return;
-// 		}
-
-// 		var wWidth = window.innerWidth;
-// 		var wHeight = window.innerHeight;
-
-// 		var pWidth = popover.offsetWidth;
-// 		var pHeight = popover.offsetHeight;
-
-// 		var aWidth = anchor.offsetWidth;
-// 		var aHeight = anchor.offsetHeight;
-// 		var offset = $.offset(anchor);
-
-// 		var arrow = popover.querySelector('.' + CLASS_POPOVER_ARROW);
-// 		if (!arrow) {
-// 			arrow = document.createElement('div');
-// 			arrow.className = CLASS_POPOVER_ARROW;
-// 			popover.appendChild(arrow);
-// 		}
-// 		var arrowSize = arrow && arrow.offsetWidth / 2 || 0;
+	var CLASS_POPOVER = 'nvui-popover';
+	var CLASS_POPOVER_ARROW = 'nvui-popover-arrow';
+	var CLASS_ACTION_POPOVER = 'nvui-popover-action';
+	var CLASS_BACKDROP = 'nvui-backdrop';
+	var CLASS_BAR_POPOVER = 'nvui-bar-popover';
+	var CLASS_BAR_BACKDROP = 'nvui-bar-backdrop';
+	var CLASS_ACTION_BACKDROP = 'nvui-backdrop-action';
+	var CLASS_ACTIVE = 'nvui-active';
+	var CLASS_BOTTOM = 'nvui-bottom';
 
 
 
-// 		var pTop = 0;
-// 		var pLeft = 0;
-// 		var diff = 0;
-// 		var arrowLeft = 0;
-// 		var defaultPadding = popover.classList.contains(CLASS_ACTION_POPOVER) ? 0 : 5;
+	var handle = function(event, target) {
+		if (target.tagName === 'A' && target.hash) {
+			$.targets._popover = document.getElementById(target.hash.replace('#', ''));
+			if ($.targets._popover && $.targets._popover.classList.contains(CLASS_POPOVER)) {
+				return target;
+			} else {
+				$.targets._popover = null;
+			}
+		}
+		return false;
+	};
 
-// 		var position = 'top';
-// 		if ((pHeight + arrowSize) < (offset.top - window.pageYOffset)) { //top
-// 			pTop = offset.top - pHeight - arrowSize;
-// 		} else if ((pHeight + arrowSize) < (wHeight - (offset.top - window.pageYOffset) - aHeight)) { //bottom
-// 			position = 'bottom';
-// 			pTop = offset.top + aHeight + arrowSize;
-// 		} else { //middle
-// 			position = 'middle';
-// 			pTop = Math.max((wHeight - pHeight) / 2 + window.pageYOffset, 0);
-// 			pLeft = Math.max((wWidth - pWidth) / 2 + window.pageXOffset, 0);
-// 		}
-// 		if (position === 'top' || position === 'bottom') {
-// 			pLeft = aWidth / 2 + offset.left - pWidth / 2;
-// 			diff = pLeft;
-// 			if (pLeft < defaultPadding) pLeft = defaultPadding;
-// 			if (pLeft + pWidth > wWidth) pLeft = wWidth - pWidth - defaultPadding;
+	$.registerTarget({
+		name: name,
+		index: 60,
+		handle: handle,
+		target: false,
+		isReset: false,
+		isContinue: true
+	});
 
-// 			if (arrow) {
-// 				if (position === 'top') {
-// 					arrow.classList.add(CLASS_BOTTOM);
-// 				} else {
-// 					arrow.classList.remove(CLASS_BOTTOM);
-// 				}
-// 				diff = diff - pLeft;
-// 				arrowLeft = (pWidth / 2 - arrowSize / 2 + diff);
-// 				arrowLeft = Math.max(Math.min(arrowLeft, pWidth - arrowSize * 2 - 6), 6);
-// 				arrow.setAttribute('style', 'left:' + arrowLeft + 'px');
-// 			}
-// 		} else if (position === 'middle') {
-// 			arrow.setAttribute('style', 'display:none');
-// 		}
-// 		setStyle(popover, 'block', pTop, pLeft);
-// 	};
+	var fixedPopoverScroll = function(isPopoverScroll) {
+		//		if (isPopoverScroll) {
+		//			document.body.setAttribute('style', 'overflow:hidden;');
+		//		} else {
+		//			document.body.setAttribute('style', '');
+		//		}
+	};
+	var onPopoverShown = function(e) {
+		this.removeEventListener('webkitTransitionEnd', onPopoverShown);
+		this.addEventListener('touchmove', $.preventDefault);
+		$.trigger(this, 'shown', this);
+	}
+	var onPopoverHidden = function(e) {
+		setStyle(this, 'none');
+		this.removeEventListener('webkitTransitionEnd', onPopoverHidden);
+		this.removeEventListener('touchmove', $.preventDefault);
+		fixedPopoverScroll(false);
+		$.trigger(this, 'hidden', this);
+	};
 
-// 	$.createMask = function(callback) {
-// 		var element = document.createElement('div');
-// 		element.classList.add(CLASS_BACKDROP);
-// 		element.addEventListener('touchmove', $.preventDefault);
-// 		element.addEventListener('tap', function() {
-// 			mask.close();
-// 		});
-// 		var mask = [element];
-// 		mask._show = false;
-// 		mask.show = function() {
-// 			mask._show = true;
-// 			element.setAttribute('style', 'opacity:1');
-// 			document.body.appendChild(element);
-// 			return mask;
-// 		};
-// 		mask._remove = function() {
-// 			if (mask._show) {
-// 				mask._show = false;
-// 				element.setAttribute('style', 'opacity:0');
-// 				$.later(function() {
-// 					var body = document.body;
-// 					element.parentNode === body && body.removeChild(element);
-// 				}, 350);
-// 			}
-// 			return mask;
-// 		};
-// 		mask.close = function() {
-// 			if (callback) {
-// 				if (callback() !== false) {
-// 					mask._remove();
-// 				}
-// 			} else {
-// 				mask._remove();
-// 			}
-// 		};
-// 		return mask;
-// 	};
-// 	$.fn.popover = function() {
-// 		var args = arguments;
-// 		this.each(function() {
-// 			$.targets._popover = this;
-// 			if (args[0] === 'show' || args[0] === 'hide' || args[0] === 'toggle') {
-// 				togglePopover(this, args[1]);
-// 			}
-// 		});
-// 	};
+	var backdrop = (function() {
+		var element = document.createElement('div');
+		element.classList.add(CLASS_BACKDROP);
+		element.addEventListener('touchmove', $.preventDefault);
+		element.addEventListener('tap', function(e) {
+			var popover = $.targets._popover;
+			if (popover) {
+				popover.addEventListener('webkitTransitionEnd', onPopoverHidden);
+				popover.classList.remove(CLASS_ACTIVE);
+				removeBackdrop(popover);
+				document.body.setAttribute('style', ''); //webkitTransitionEnd有时候不触发？
+			}
+		});
 
-// })(nvui, window, document, 'popover');
+		return element;
+	}());
+	var removeBackdrop = function(popover) {
+		backdrop.setAttribute('style', 'opacity:0');
+		$.targets.popover = $.targets._popover = null; //reset
+		setTimeout(function() {
+			if (!popover.classList.contains(CLASS_ACTIVE) && backdrop.parentNode && backdrop.parentNode === document.body) {
+				document.body.removeChild(backdrop);
+			}
+		}, 350);
+	};
+	window.addEventListener('tap', function(e) {
+		if (!$.targets.popover) {
+			return;
+		}
+		var toggle = false;
+		var target = e.target;
+		for (; target && target !== document; target = target.parentNode) {
+			if (target === $.targets.popover) {
+				toggle = true;
+			}
+		}
+		if (toggle) {
+			e.detail.gesture.preventDefault(); //fixed hashchange
+			togglePopover($.targets._popover, $.targets.popover);
+		}
+
+	});
+
+	var togglePopover = function(popover, anchor) {
+		//remove一遍，以免来回快速切换，导致webkitTransitionEnd不触发，无法remove
+		popover.removeEventListener('webkitTransitionEnd', onPopoverShown);
+		popover.removeEventListener('webkitTransitionEnd', onPopoverHidden);
+		backdrop.classList.remove(CLASS_BAR_BACKDROP);
+		backdrop.classList.remove(CLASS_ACTION_BACKDROP);
+		var _popover = document.querySelector('.nvui-popover.nvui-active');
+		if (_popover) {
+			//			_popover.setAttribute('style', '');
+			_popover.addEventListener('webkitTransitionEnd', onPopoverHidden);
+			_popover.classList.remove(CLASS_ACTIVE);
+			//			_popover.removeEventListener('webkitTransitionEnd', onPopoverHidden);
+			//			fixedPopoverScroll(false);
+			//同一个弹出则直接返回，解决同一个popover的toggle
+			if (popover === _popover) {
+				removeBackdrop(_popover);
+				return;
+			}
+		}
+		var isActionSheet = false;
+		if (popover.classList.contains(CLASS_BAR_POPOVER) || popover.classList.contains(CLASS_ACTION_POPOVER)) { //navBar
+			if (popover.classList.contains(CLASS_ACTION_POPOVER)) { //action sheet popover
+				isActionSheet = true;
+				backdrop.classList.add(CLASS_ACTION_BACKDROP);
+			} else { //bar popover
+				backdrop.classList.add(CLASS_BAR_BACKDROP);
+				//				if (anchor) {
+				//					if (anchor.parentNode) {
+				//						var offsetWidth = anchor.offsetWidth;
+				//						var offsetLeft = anchor.offsetLeft;
+				//						var innerWidth = window.innerWidth;
+				//						popover.style.left = (Math.min(Math.max(offsetLeft, defaultPadding), innerWidth - offsetWidth - defaultPadding)) + "px";
+				//					} else {
+				//						//TODO anchor is position:{left,top,bottom,right}
+				//					}
+				//				}
+			}
+		}
+		setStyle(popover, 'block'); //actionsheet transform
+		popover.offsetHeight;
+		popover.classList.add(CLASS_ACTIVE);
+		backdrop.setAttribute('style', '');
+		document.body.appendChild(backdrop);
+		fixedPopoverScroll(true);
+		calPosition(popover, anchor, isActionSheet); //position
+		backdrop.classList.add(CLASS_ACTIVE);
+		popover.addEventListener('webkitTransitionEnd', onPopoverShown);
+	};
+	var setStyle = function(popover, display, top, left) {
+		var style = popover.style;
+		if (typeof display !== 'undefined')
+			style.display = display;
+		if (typeof top !== 'undefined')
+			style.top = top + 'px';
+		if (typeof left !== 'undefined')
+			style.left = left + 'px';
+	};
+	var calPosition = function(popover, anchor, isActionSheet) {
+		if (!popover || !anchor) {
+			return;
+		}
+
+		if (isActionSheet) { //actionsheet
+			setStyle(popover, 'block')
+			return;
+		}
+
+		var wWidth = window.innerWidth;
+		var wHeight = window.innerHeight;
+
+		var pWidth = popover.offsetWidth;
+		var pHeight = popover.offsetHeight;
+
+		var aWidth = anchor.offsetWidth;
+		var aHeight = anchor.offsetHeight;
+		var offset = $.offset(anchor);
+
+		var arrow = popover.querySelector('.' + CLASS_POPOVER_ARROW);
+		if (!arrow) {
+			arrow = document.createElement('div');
+			arrow.className = CLASS_POPOVER_ARROW;
+			popover.appendChild(arrow);
+		}
+		var arrowSize = arrow && arrow.offsetWidth / 2 || 0;
+
+
+
+		var pTop = 0;
+		var pLeft = 0;
+		var diff = 0;
+		var arrowLeft = 0;
+		var defaultPadding = popover.classList.contains(CLASS_ACTION_POPOVER) ? 0 : 5;
+
+		var position = 'top';
+		if ((pHeight + arrowSize) < (offset.top - window.pageYOffset)) { //top
+			pTop = offset.top - pHeight - arrowSize;
+		} else if ((pHeight + arrowSize) < (wHeight - (offset.top - window.pageYOffset) - aHeight)) { //bottom
+			position = 'bottom';
+			pTop = offset.top + aHeight + arrowSize;
+		} else { //middle
+			position = 'middle';
+			pTop = Math.max((wHeight - pHeight) / 2 + window.pageYOffset, 0);
+			pLeft = Math.max((wWidth - pWidth) / 2 + window.pageXOffset, 0);
+		}
+		if (position === 'top' || position === 'bottom') {
+			pLeft = aWidth / 2 + offset.left - pWidth / 2;
+			diff = pLeft;
+			if (pLeft < defaultPadding) pLeft = defaultPadding;
+			if (pLeft + pWidth > wWidth) pLeft = wWidth - pWidth - defaultPadding;
+
+			if (arrow) {
+				if (position === 'top') {
+					arrow.classList.add(CLASS_BOTTOM);
+				} else {
+					arrow.classList.remove(CLASS_BOTTOM);
+				}
+				diff = diff - pLeft;
+				arrowLeft = (pWidth / 2 - arrowSize / 2 + diff);
+				arrowLeft = Math.max(Math.min(arrowLeft, pWidth - arrowSize * 2 - 6), 6);
+				arrow.setAttribute('style', 'left:' + arrowLeft + 'px');
+			}
+		} else if (position === 'middle') {
+			arrow.setAttribute('style', 'display:none');
+		}
+		setStyle(popover, 'block', pTop, pLeft);
+	};
+
+	$.createMask = function(callback) {
+		var element = document.createElement('div');
+		element.classList.add(CLASS_BACKDROP);
+		element.addEventListener('touchmove', $.preventDefault);
+		element.addEventListener('tap', function() {
+			mask.close();
+		});
+		var mask = [element];
+		mask._show = false;
+		mask.show = function() {
+			mask._show = true;
+			element.setAttribute('style', 'opacity:1');
+			document.body.appendChild(element);
+			return mask;
+		};
+		mask._remove = function() {
+			if (mask._show) {
+				mask._show = false;
+				element.setAttribute('style', 'opacity:0');
+				$.later(function() {
+					var body = document.body;
+					element.parentNode === body && body.removeChild(element);
+				}, 350);
+			}
+			return mask;
+		};
+		mask.close = function() {
+			if (callback) {
+				if (callback() !== false) {
+					mask._remove();
+				}
+			} else {
+				mask._remove();
+			}
+		};
+		return mask;
+	};
+	$.fn.popover = function() {
+		var args = arguments;
+		this.each(function() {
+			$.targets._popover = this;
+			if (args[0] === 'show' || args[0] === 'hide' || args[0] === 'toggle') {
+				togglePopover(this, args[1]);
+			}
+		});
+	};
+
+})(nvui, window, document, 'popover');
 (function($, window) {
 	/**
 	 * 警告消息框
@@ -3277,10 +3277,10 @@ window.$ = nvui;
 // 	var touchSupport = ('ontouchstart' in document);
 // 	var tapEventName = touchSupport ? 'tap' : 'click';
 // 	var changeEventName = 'change';
-// 	var holderClassName = 'mui-numbox';
-// 	var plusClassName = 'mui-numbox-btn-plus';
-// 	var minusClassName = 'mui-numbox-btn-minus';
-// 	var inputClassName = 'mui-numbox-input';
+// 	var holderClassName = 'nvui-numbox';
+// 	var plusClassName = 'nvui-numbox-btn-plus';
+// 	var minusClassName = 'nvui-numbox-btn-minus';
+// 	var inputClassName = 'nvui-numbox-input';
 
 // 	var Numbox = $.Numbox = $.Class.extend({
 // 		init: function(holder, options) {
@@ -3360,7 +3360,7 @@ window.$ = nvui;
 // 		return this;
 // 	}
 
-// 	//自动处理 class='mui-locker' 的 dom
+// 	//自动处理 class='nvui-locker' 的 dom
 // 	$.ready(function() {
 // 		$('.' + holderClassName).numbox();
 // 	});

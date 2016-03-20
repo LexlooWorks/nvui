@@ -394,4 +394,4 @@
 		$('.nvui-listpicker').listpicker();
 	});
 
-})(mui, document);
+})(nvui, document);
